@@ -1,18 +1,104 @@
-import React from 'react';
-import {Link, NavLink} from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import { Link,NavLink} from 'react-router-dom';
+import logo from "assets/img/logo.png"
+import {FaXmark, FaBars} from "react-icons/fa6"
 
 const Navbar=()=>{
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isSticky, setIsSticky] = useState(false);
+    
+    //Toggle Menu
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen)
+    }
+
+
+
+    useEffect(() => {
+        const handlescroll = () => {
+            if(window.scrollY > 100) {
+                setIsSticky(true);
+            }
+            else {
+                setIsSticky(false);
+            }
+        };
+        window.addEventListener('scroll', handlescroll);
+
+        return () => {
+            window.addEventListener('scroll',handlescroll);
+        }
+    })
+    // navigation array
+    const navItems = [
+        {link: "Home",path:"home"},
+        {link: "About",path:"About"},
+        {link: "Services",path:"Services"},
+        {link: "Contact",path:"Contact"},
+
+
+
+
+    ]
     return (
-        <nav>
-            <div className="nav-wrapper">
-                <ul id="nav-mobile" className="right hide-on-med-and-down">
-                    <li><NavLink to="/">Home</NavLink></li>
-                    <li><NavLink to="/login">Login</NavLink></li>
-                    <li><NavLink to="/contact">Contact</NavLink></li>
-                    <li><NavLink to="/about">About</NavLink></li>
-                </ul>
+
+
+        <header className="w-full bg-white md:bg-transparent fixed top-0 left-0 right-0">
+            <nav className={`py-4 lg:px-14 ${isSticky ? "sticky top-0 left-0 right-0 border-b bg-white duration-300j" : ""}`}>
+                <div className="flex items-center justify-between text-base gap-8">
+                    <a href="/" className="text-2xl font-semibold flex items-center space-x-3">
+                        <img src="logo.png" alt="" className="w-10 inline-block"/>
+                        <span className="text-[#263238]">TunDevJobs</span>
+                    </a>
+
+                    {/* Nav items for large devices */}
+                    <ul className="md:flex space-x-12 hidden ">
+                        {navItems.map(({link, path}) => (
+                            <li key={path} className="first:font-medium">
+                                <Link to={path} className="block text-base text-gray-900 hover:text-black">
+                                    {link}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+
+                    {/* Buttons for large devices */}
+                    <div className="space-x-12 hidden lg:flex items-center">
+                        <a href="/login" className="text-blue-950 hover:text-gray-900">
+                            Login
+                        </a>
+                        <button
+                            className="bg-indigo-950 text-white py-2 px-4 transition-all duration-300 rounded hover:bg-indigo-200">
+                            Sign Up
+                        </button>
+                    </div>
+
+                    {/* Menu button for mobile devices */}
+                    <div className="md:hidden">
+                        <button onClick={toggleMenu}>
+                            {isMenuOpen ? (
+                                <FaXmark className="h-6 w-6 text-[#263238]"/>
+                            ) : (
+                                <FaBars className="h-6 text-[#263238]"/>
+                            )}
+                        </button>
+                    </div>
+
+                </div>
+            </nav>
+
+            {/* nav items for mobile devices*/}
+            <div className={`space-y-4 px-4 mt-16 py-7 bg-indigo-300 ${ isMenuOpen ? "block fixed top-0 right-0 left-0":"hidden"}`}>
+                {navItems.map(({link, path}) => (
+                    <li key={path} className="first:font-medium">
+                        <Link to={path} className="block text-base text-white hover:text-black">
+                            {link}
+                        </Link>
+                    </li>
+                ))}
             </div>
-        </nav>
+        </header>
+
     )
 
 }
