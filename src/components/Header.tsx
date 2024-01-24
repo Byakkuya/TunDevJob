@@ -1,10 +1,8 @@
 import React from 'react';
 import {Carousel} from "flowbite-react";
-import interface1 from "../assets/img/interface1.png"
 
-import search from "../assets/img/search.png"
-import bestprofile from  "../assets/img/bestprofile.png"
-const Home = () => {
+import bestprofile from "../assets/img/bestprofile.png"
+const Header = () => {
     return (
         <div className='bg-neutral-50'>
             <div className='px-4 lg:px-14 max-w-screen-2x1 mx-auto min-h-screen h-screen'>
@@ -52,4 +50,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default Header;
