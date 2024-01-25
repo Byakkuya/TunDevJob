@@ -4,7 +4,8 @@ import Header from "../../components/Header";
 import Offers from "../../components/Offers";
 import Why from "../../components/Why";
 import Footer from "../../components/Footer";
-import How from "../../components/how";
+// @ts-ignore
+import How from "../../components/How";
 const Home = () => {
     return (
         <>

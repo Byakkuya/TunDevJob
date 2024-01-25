@@ -33,7 +33,6 @@ const Navbar=()=>{
     const navItems = [
         {link: "Home",path:"home"},
         {link: "About",path:"About"},
-        {link: "Services",path:"Services"},
         {link: "Contact",path:"Contact"},
 
 
