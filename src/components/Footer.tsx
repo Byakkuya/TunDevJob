@@ -30,7 +30,7 @@ const Footer = () => {
             </div>
             <span className="block my-8 border-t border-blue-gray-50"/>
             <p className="block font-sans text-base antialiased font-normal leading-relaxed text-center text-blue-gray-900">
-                © 2024 Tunisian Developpers Jobs
+                © 2024 Tunisian Developers Jobs
             </p>
         </footer>
     );

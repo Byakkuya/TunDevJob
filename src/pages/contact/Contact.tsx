@@ -11,8 +11,8 @@ const Contact = () => {
 
     return (
         <>
-        <div className="flex w-full min-h-screen justify-center items-center bg-gradient-to-r from-indigo-50 to-indigo-500">
-            <div className="flex flex-col md:flex-row span-x-6 span-y-6 bg-gradient-to-r from-indigo-500 to-indigo-50 w-full max-w-4xl p-8 rounded-xl shadow-lg text-white">
+        <div className="flex w-full min-h-screen justify-center items-center ">
+            <div className="flex flex-col md:flex-row span-x-6 span-y-6 bg-gradient-to-r from-indigo-400 to-[#ECFDFF] w-full max-w-4xl p-8 rounded-xl shadow-lg text-white">
                 <div className="flex flex-col space-y-8 justify-between">
                     <div>
                     <h1 className="font-bold text-4xl tracking-wide">Contact Us</h1>
@@ -39,7 +39,7 @@ const Contact = () => {
 
                         </div>
                     </div>
-                    <div className="flex space-x-4 text-lg">
+                    <div className=" flex space-x-4 text-lg">
                         <a href="#"><FaFacebook/></a>
                         <a href="#"><FaInstagram /></a>
                         <a href="#"><FaLinkedinIn /></a>
@@ -47,8 +47,8 @@ const Contact = () => {
 
                     </div>
                 </div>
-                <div>
-                    <div className="bg-white rounded-xl shadow-lg p-8 text-gray-600 md:w-80">
+                <div className="sm:mt-5 ssm:mt-5">
+                    <div className=" bg-white rounded-xl shadow-lg p-8 text-gray-600 md:w-80">
                         <form action="" className="flex flex-col space-y-4">
                             <div>
                                 <label htmlFor="" className="text-sm">Your name</label>
@@ -70,9 +70,11 @@ const Contact = () => {
                                 <textarea placeholder="Your message" rows={5}
                                        className="ring-1 ring-gray-300 w-full rounded-md px-4 py-2 mt-2 outline-none focus:ring-2 focus:ring-teal-300"></textarea>
                             </div>
-                            <button className="inline-block self-end bg-indigo-950 text-white font-bold rounded-lg px-6 py-2 hover:bg-indigo-500">
+
+                            <button className=" sm:self-center ssm:self-center  bg-indigo-950 text-white font-bold rounded-lg px-6 py-2 hover:bg-indigo-500">
                                 Send Message
                             </button>
+
 
                         </form>
                     </div>

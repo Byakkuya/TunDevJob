@@ -2,13 +2,12 @@ import React from 'react';
 
 const How = () => {
     return (
-        <div className="h-screen ">
+        <div className="">
             <div className="md:w-3/5 mx-auto">
-                <h2 className="text-4xl text-neutral-700 font-semibold mb-4 md:w-4/5">As a Developer you can ....</h2>
-                <p className="md:w-3/4 text-sm text-neutral-600 mb-8">
+                <h2 className="ssm:mx-2 text-4xl text-neutral-700 font-semibold mb-4 md:w-4/5"> As a Developer you can dsfqsdqsq qsdfqds</h2>
+                <p className="ssm:mx-2 text-sm text-neutral-600 mb-8">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis metus rhoncus, dapibus nibh
-                    sagittis, posuere magna. In hac habitasse platea dictumst. Aliquam sodales eu eros non maximus.
-                    Nulla tincidunt eu risus eu pellentesque. Duis a leo nec nisl molestie sollicitudin
+                    sagittis, posuere magna.
                 </p>
             </div>
 

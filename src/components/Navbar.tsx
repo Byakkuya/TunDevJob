@@ -62,7 +62,7 @@ const Navbar=()=>{
                     </ul>
 
                     {/* Buttons for large devices */}
-                    <div className="space-x-12 hidden lg:flex items-center">
+                    <div className=" sm:flex ssm:flex space-x-12 hidden lg:flex items-center">
                         <a href="/login" className="transition-colors text-blue-gray-900 hover:text-blue-500 focus:text-blue-500">
                             Login
                         </a>
