@@ -3,8 +3,8 @@ import './App.css';
 import {Route, Routes} from "react-router";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home/Home";
-import About from "./components/About";
-import Contact from "./components/Contact";
+import About from "./pages/about/About";
+import Contact from "./pages/contact/Contact";
 import Login from "./components/Login";
 import Signup from "./components/signup";
 

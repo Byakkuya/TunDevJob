@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import { Link,NavLink} from 'react-router-dom';
-import logo from "assets/img/logo.png"
+import { Link} from 'react-router-dom';
+import logo from "../assets/img/logo.png"
 import {FaXmark, FaBars} from "react-icons/fa6"
 
 const Navbar=()=>{
@@ -46,7 +46,7 @@ const Navbar=()=>{
             <nav className={`py-4 lg:px-14 ${isSticky ? "sticky top-0 left-0 right-0 border-b bg-white duration-300j" : ""}`}>
                 <div className="flex items-center justify-between text-base gap-8">
                     <a href="/" className="text-2xl font-semibold flex items-center space-x-3">
-                        <img src="logo.png" alt="" className="w-10 inline-block"/>
+                        <img src={logo} alt="" className="w-10 inline-block"/>
                         <span className="text-[#263238]">TunDevJobs</span>
                     </a>
 
@@ -54,7 +54,7 @@ const Navbar=()=>{
                     <ul className="md:flex space-x-12 hidden ">
                         {navItems.map(({link, path}) => (
                             <li key={path} className="first:font-medium">
-                                <Link to={path} className="block text-base text-gray-900 hover:text-black">
+                                <Link to={path} className="block text-base transition-colors text-blue-gray-900 hover:text-blue-500 focus:text-blue-500">
                                     {link}
                                 </Link>
                             </li>
@@ -63,13 +63,15 @@ const Navbar=()=>{
 
                     {/* Buttons for large devices */}
                     <div className="space-x-12 hidden lg:flex items-center">
-                        <a href="/login" className="text-blue-950 hover:text-gray-900">
+                        <a href="/login" className="transition-colors text-blue-gray-900 hover:text-blue-500 focus:text-blue-500">
                             Login
                         </a>
+                        <a href="/signup">
                         <button
                             className="bg-indigo-950 text-white py-2 px-4 transition-all duration-300 rounded hover:bg-indigo-200">
                             Sign Up
                         </button>
+                    </a>
                     </div>
 
                     {/* Menu button for mobile devices */}
