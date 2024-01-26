@@ -4,7 +4,7 @@ import { FaMapLocationDot } from "react-icons/fa6";
 import { LuMailCheck } from "react-icons/lu";
 import { FaFacebook,FaInstagram,FaLinkedinIn   } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import Footer from "../../components/Footer";
+
 
 
 const Contact = () => {
@@ -79,7 +79,6 @@ const Contact = () => {
                 </div>
             </div>
         </div>
-            <Footer/>
         </>
     );
 };
