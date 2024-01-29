@@ -4,6 +4,11 @@ import logo from "../assets/img/logo.png"
 import {FaXmark, FaBars} from "react-icons/fa6"
 
 const Navbar=()=>{
+    const user = {
+        user: {
+            accountType: "Developer"
+        }
+    }
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isSticky, setIsSticky] = useState(false);
     
@@ -32,8 +37,8 @@ const Navbar=()=>{
     // navigation array
     const navItems = [
         {link: "Home",path:"home"},
-        {link: "About",path:"About"},
-        {link: "Contact",path:"Contact"},
+        {link: "FindJobs",path:"Find-jobs"},
+        {link: "Companies",path:"Companies"},
 
 
 
@@ -78,9 +83,9 @@ const Navbar=()=>{
                     <div className="md:hidden">
                         <button onClick={toggleMenu}>
                             {isMenuOpen ? (
-                                <FaXmark className="h-6 w-6 text-[#263238]"/>
+                                <FaXmark className="ssm:mx-1 h-6 w-6 text-[#263238]"/>
                             ) : (
-                                <FaBars className="h-6 text-[#263238]"/>
+                                <FaBars className="ssm:mx-1 h-6 text-[#263238]"/>
                             )}
                         </button>
                     </div>
@@ -89,7 +94,7 @@ const Navbar=()=>{
             </nav>
 
             {/* nav items for mobile devices*/}
-            <div className={`space-y-4 px-4 mt-16 py-7 bg-indigo-300 ${ isMenuOpen ? "block fixed top-0 right-0 left-0":"hidden"}`}>
+            <div className={`space-y-4 ssm:space-y-1 px-4 mt-16 py-7 bg-gradient-to-t from-indigo-400 to-[#e9f8ff] ${ isMenuOpen ? "block fixed top-0 right-0 left-0":"hidden"}`}>
                 {navItems.map(({link, path}) => (
                     <li key={path} className="first:font-medium">
                         <Link to={path} className="block text-base text-white hover:text-black">

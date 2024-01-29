@@ -8,7 +8,7 @@ import {Link} from "react-router-dom";
 const Signup = () => {
     return (
         <div
-            className=" text-white h-[100vh] flex justify-center items-center bg-cover bg-gradient-to-r from-indigo-50 to-indigo-500">
+            className=" text-white h-[100vh] flex justify-center items-center bg-cover bg-gradient-to-b from-indigo-400 to-[#e9f8ff]">
             <div
                 className="bg-slate-800 border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-30">
                 <h1 className="text-4xl text-whitefont-bold text-center">Signup</h1>

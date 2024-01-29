@@ -8,7 +8,7 @@ const Footer = () => {
                 <img src={logo} alt="logo-ct" className="w-10"/>
                 <ul className="flex flex-wrap items-center gap-y-2 gap-x-8">
                     <li>
-                        <a href="/about/About"
+                        <a href="/About"
                            className="block font-sans text-base antialiased font-normal leading-relaxed transition-colors text-blue-gray-900 hover:text-blue-500 focus:text-blue-500">
                             About Us
                         </a>
@@ -20,7 +20,7 @@ const Footer = () => {
                         </a>
                     </li>
                     <li>
-                        <a href="/contact/Contact"
+                        <a href="/src/components/Contact"
                            className="block font-sans text-base antialiased font-normal leading-relaxed transition-colors text-blue-gray-900 hover:text-blue-500 focus:text-blue-500">
                             Contact
                         </a>
