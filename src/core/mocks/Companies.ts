@@ -33,4 +33,4 @@ export const mockCompanies: Company[] = [
         profileUrl: 'https://www.techgiants.com/profile',
     }
 
-];
+];0
