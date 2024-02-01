@@ -10,3 +10,4 @@ export type Job = {
     applicants:number;
     created_at:Date;
 };
+
