@@ -2,7 +2,7 @@ import React from 'react';
 import logo from "../assets/img/logo.png"
 const Footer = () => {
     return (
-        <footer className="w-full p-8 bg-white">
+        <footer className="w-full p-8 bg-white ">
             <div
                 className="flex flex-row flex-wrap items-center justify-center text-center bg-white gap-y-6 gap-x-12 md:justify-between">
                 <img src={logo} alt="logo-ct" className="w-10"/>
