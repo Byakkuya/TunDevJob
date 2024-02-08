@@ -23,5 +23,5 @@ export const mockDevelopers: Developer[] = [
         jobPosts: [mockJobs[2]], // Associated with the third job post in mockJobs
         token: 'xyz456token',
     },
-    // Add more developers as needed
+
 ];

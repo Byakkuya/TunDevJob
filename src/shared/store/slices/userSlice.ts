@@ -1,9 +1,13 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {Dispatch} from "redux";
+import {mockDevelopers} from "../../../core/mocks/Developers";
+import {users} from "../../../core/mocks/users";
 
+const storedUserInfo = window?.localStorage.getItem("userInfo");
+const userFromLocalStorage = storedUserInfo ? JSON.parse(storedUserInfo) : users[1];
 
 const initialState = {
-    user: null,
+    user: userFromLocalStorage,
 };
 
 const userSlice = createSlice({

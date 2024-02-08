@@ -16,8 +16,8 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
             >
                 <div className='flex gap-3'>
                     <img
-                        src={job?.Company?.profileUrl} // Assuming profileUrl is in your Company type
-                        alt={job?.Company?.name}
+                        src={job?.company?.profileUrl} // Assuming profileUrl is in your Company type
+                        alt={job?.company?.name}
                         className='w-14 h-14'
                     />
 
