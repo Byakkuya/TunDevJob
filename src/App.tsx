@@ -16,6 +16,8 @@ import JobDetail from "./pages/JobDetail";
 import Footer from "./components/Footer";
 import Login from "./components/Login";
 import Signup from "./components/signup";
+import SignupCompany from "./components/SignupCompany";
+import SignupDeveloper from "./components/SignupDeveloper";
 
 const user = {
     user: {
@@ -37,6 +39,7 @@ function App() {
                         <Route path='/' element={<Navigate to='/home' replace={true}/>}/>
                         <Route path="/find-jobs" element={<FindJobs/>}/>
                         <Route path="/Companies" element={<Companies/>}/>
+                        {/*}
                         <Route
                             path={
                                 user?.user?.accountType === "Developer"
@@ -45,6 +48,7 @@ function App() {
                             }
                             element={<Profile/>}
                         />
+                        */}
                         <Route path="/Company-profile" element={<CompanyProfile/>}/>
                         <Route path="/Company-profile/:id" element={<CompanyProfile/>} />
                         <Route path="/upload-job" element={<UploadJob/>}/>
@@ -56,6 +60,8 @@ function App() {
                     <Route path="/about" element={<About/>}/>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/signup" element={<Signup/>}/>
+                    <Route path="/signup/developer" element={<SignupDeveloper/>}/>
+                    <Route path="/signup/company" element={<SignupCompany/>}/>
 
 
                 </Routes>
