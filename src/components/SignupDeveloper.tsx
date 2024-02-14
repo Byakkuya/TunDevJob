@@ -18,7 +18,7 @@ const validationSchema1 = Yup.object({
     name: Yup.string().required("Name is required"),
     email: Yup.string().required("Email is required")
         .matches(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, "Invalid email"),
-    /*
+
         password: Yup
             .string()
             .matches(passwordRules, { message: "5 min ,1lower ,1Upper, 1 num" })
@@ -28,7 +28,7 @@ const validationSchema1 = Yup.object({
             .string()
             .oneOf([Yup.ref("password"), undefined], "Passwords must match")
             .required("Required"),
-    */
+
 
 
 });
@@ -43,7 +43,15 @@ const validationSchema3 = Yup.object({
     profilePicture: Yup.mixed()
         .required("Profile Picture is required")
 
+    ,
+    currentposition: Yup.string().required("Current Position is required"),
 
+
+});
+const validationSchema4 = Yup.object({
+    resume: Yup.mixed().required("Resume is required"),
+    linkedin: Yup.string().required("Linkedin is required"),
+    github: Yup.string().required("Github is required"),
 });
 
 
@@ -108,28 +116,30 @@ const SignupDeveloper = () => {
                         validationSchema={validationSchema3}
                     >
 
-                        <InputField label="your current position" name="currentposition"/>
+                        <InputField label="Current Position" name="currentposition"/>
                         <div className="flex my-8">
-                            <h3 className="text-black">Profile Picture</h3>
-                            <FileInputField label="Profile Picture" name="profilePicture"/>
+                            <h3 className="text-black">Your Profile Picture</h3>
+                            <FileInputField label="profilePicture" name="profilePicture"/>
                         </div>
 
 
                     </FormStep>
                     <FormStep
-                        stepName="Skills"
+                        stepName="socials"
                         onSubmit={() => console.log("step 4 submit ")}
+                        validationSchema={validationSchema4}
                     >
-                        <InputField label="skills" name="skills"/>
 
-                        <InputField label="linkedin" name="linkedin"/>
-                        <InputField label="github" name="github"/>
+                        <InputField label="Github Link" name="github"/>
+                        <InputField label="LinkedIn Link" name="linkedin"/>
                         <div className="flex my-8">
-                            <h3 className="text-black">Your resume</h3>
+                            <h3 className="text-black">Your Resume</h3>
                             <FileInputField label="resume" name="resume"/>
-
                         </div>
+
+
                     </FormStep>
+
 
 
                 </MultiStepForm>
