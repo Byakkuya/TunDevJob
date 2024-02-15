@@ -1,6 +1,6 @@
 import {Company} from "./Company";
 export type Job = {
-    id:number;
+    id:number | string ;
     company: Company;
     jobTitle: string;
     location: string;
@@ -8,7 +8,7 @@ export type Job = {
     salary: string;
     detail: {
         description: string;
-        requirement?: string; // Make 'requirement' optional if it's not always present
+        requirement?: string; 
     }[];
     applicants:number;
     created_at:Date;
