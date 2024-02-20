@@ -15,9 +15,9 @@ const Companies = () => {
 
 
     return (
-        <div className='mt-10 container mx-auto flex flex-col gap-5 2xl:gap-10 px-5 md:px-0 py-6  w-full'>
-                <div className='flex items-center justify-between mb-4'>
-                    <p className='text-sm md:text-base'>
+        <div className='mt-10 container mx-auto flex flex-col gap-5 2xl:gap-10 px-5 md:px-0 py-6 w-full '>
+            <div className='flex items-center justify-between mb-4'>
+                <p className='text-sm md:text-base'>
                         Showing: <span className='font-semibold'>500</span> Companies
                         Available
                     </p>

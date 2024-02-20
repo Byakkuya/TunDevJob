@@ -2,9 +2,6 @@ import React, { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useForm, RegisterOptions } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { HiLocationMarker } from "react-icons/hi";
-import { AiOutlineMail } from "react-icons/ai";
-import { FiPhoneCall, FiEdit3, FiUpload } from "react-icons/fi";
 import { Link, useParams } from "react-router-dom";
 import {mockCompanies} from "../core/mocks/Companies";
 import {mockJobs} from "../core/mocks/Jobs";
@@ -12,6 +9,11 @@ import CustomButton from "../components/CustomButton";
 import TextInput from "../components/TextInput";
 import JobCard from "../components/JobCard";
 import Loading from "../components/Loading";
+
+import { Rating } from '@smastrom/react-rating'
+import '@smastrom/react-rating/style.css'
+import {reviewsData} from "../core/mocks/Reviews";
+import ReviewsList from "../components/ReviewsList";
 
 
 interface CompnayFormProps {
@@ -171,6 +173,9 @@ const CompnayForm: React.FC<CompnayFormProps> = ({ open, setOpen }) => {
 };
 
 const CompanyProfile: React.FC<CompanyProfileProps> = () => {
+
+
+    const [rating, setRating] = useState(0) // Initial value
     const params = useParams<{ id?: string }>();
     const { user } = useSelector((state: any) => state.user);
     const [info, setInfo] = useState<any>(null);
@@ -188,71 +193,68 @@ const CompanyProfile: React.FC<CompanyProfileProps> = () => {
 
     return (
         <div className='container mx-auto p-5 mt-16'>
-            <div className=''>
-                <div className='w-full flex flex-col md:flex-row gap-3 justify-between'>
-                    <h2 className='text-gray-600 text-xl font-semibold'>
-                        Welcome, {info?.name}
+            <div className='bg-blue-100 via-opacity-30 rounded-xl p-6 md:p-8'>
+                <div className='w-full flex flex-col md:flex-row gap-3 justify-between items-center'>
+                    <h2 className='text-gray-600 text-2xl md:text-3xl font-semibold'>
+                        {info?.name}
                     </h2>
+                    {/* Uncomment the code below if needed */}
+                    {/* {user?.user?.accountType === undefined &&
+            info?._id === user?.user?._id &&        (
+                <div className='flex items-center justify-center gap-4'>
+                    <CustomButton
+                        title={"Edit Profile"}
+                        onClick={() => setOpenForm(true)}
+                        iconRight={<FiEdit3/>}
+                        containerStyles={`py-1.5 px-3 md:px-5 focus:outline-none bg-blue-600 hover:bg-blue-700 text-white rounded text-sm md:text-base border border-blue-600`}
+                    />
 
-                    {user?.user?.accountType === undefined &&
-                        info?._id === user?.user?._id && (
-                            <div className='flex items-center justify-center py-5 md:py-0 gap-4'>
-                                <CustomButton
-                                    title={"Edit Profile"}
-                                    onClick={() => setOpenForm(true)}
-                                    iconRight={<FiEdit3/>}
-                                    containerStyles={`py-1.5 px-3 md:px-5 focus:outline-none bg-blue-600 hover:bg-blue-700 text-white rounded text-sm md:text-base border border-blue-600`}
-                                />
-
-                                <Link to='/upload-job'>
-                                    <CustomButton
-                                        title='Upload Job'
-                                        iconRight={<FiUpload/>}
-                                        containerStyles={`text-blue-600 py-1.5 px-3 md:px-5 focus:outline-none rounded text-sm md:text-base border border-blue-600`}
-                                    />
-                                </Link>
-                            </div>
-                        )}
+                    <Link to='/upload-job'>
+                        <CustomButton
+                            title='Upload Job'
+                            iconRight={<FiUpload/>}
+                            containerStyles={`text-blue-600 py-1.5 px-3 md:px-5 focus:outline-none rounded text-sm md:text-base border border-blue-600`}
+                        />
+                    </Link>
+                </div>
+            )}
+        */}
                 </div>
 
-                <div className='w-full flex flex-col md:flex-row justify-start md:justify-between mt-4 md:mt-8 text-sm'>
-                    <p className='flex gap-1 items-center px-3 py-1 text-slate-600 rounded-full'>
-                        <HiLocationMarker/> {info?.location ?? "No Location"}
-                    </p>
-                    <p className='flex gap-1 items-center px-3 py-1 text-slate-600 rounded-full'>
-                        <AiOutlineMail/> {info?.email ?? "No Email"}
-                    </p>
-                    <p className='flex gap-1 items-center px-3 py-1 text-slate-600 rounded-full'>
-                        <FiPhoneCall/> {info?.contact ?? "No Contact"}
-                    </p>
-
-                    <div className='flex flex-col items-center mt-10 md:mt-0'>
-                        <span className='text-xl'>{info?.jobPosts?.length}</span>
-                        <p className='text-blue-600 '>Job Post</p>
+                <div className='mt-6 md:flex md:items-center md:justify-between'>
+                    {info?.profileUrl && (
+                        <img
+                            src={info?.profileUrl}
+                            alt={info?.name}
+                            className='w-20 h-20 md:w-24 md:h-24 rounded-full object-cover mb-4 md:mb-0'
+                        />
+                    )}
+                    <div className='flex flex-col'>
+                        <p className='text-xl font-semibold mb-2'>Company Information</p>
+                        <p className='text-xl text-blue-600 font-semibold mb-2'>{info?.name}</p>
+                        <span className='text-base mb-1'>{info?.location}</span>
+                        <span className='text-sm mb-1'>{info?.email}</span>
+                        <span className='text-sm'>{info?.contact}</span>
                     </div>
                 </div>
-            </div>
 
-            <div className='w-full mt-20 flex flex-col gap-2'>
-                <p className="text-lg font-semibold mb-2">Jobs Posted</p>
-
-                <div className='flex flex-wrap gap-3'>
-                    {mockJobs?.map((job, index) => {
-                        const data = {
-                            name: info?.name,
-                            email: info?.email,
-                            ...job,
-                        };
-                        return <JobCard job={data} key={index}/>;
-                    })}
+                <div className='mt-6'>
+                    <p className='text-xl font-semibold mb-2'>About Company</p>
+                    <p className='text-sm'>{info?.about}</p>
                 </div>
             </div>
 
-            <CompnayForm open={openForm} setOpen={setOpenForm}/>
+
+            {/* Reviews */}
+            <div className='mt-10'>
+                <h1 className='text-3xl font-semibold mb-5'>Testimonials</h1>
+
+
         </div>
-
-
+            <ReviewsList reviews={reviewsData} />
+        </div>
     );
-};
+}
+
 
 export default CompanyProfile;
