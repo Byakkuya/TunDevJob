@@ -12,6 +12,8 @@ import {mockJobs, jobTypes, experience, jobLocations, contractTypes} from "../co
 import CustomButton from "../components/CustomButton";
 import JobCard from "../components/JobCard";
 import ListBox from "../components/ListBox";
+import {Modal} from "@material-ui/core";
+import UploadJob from "./UploadJob";
 interface FindJobsProps {}
 
 
@@ -120,9 +122,6 @@ const FindJobs: React.FC<FindJobsProps> = () => {
         }
     };
 
-    const filterExperience = (e: string[]) => {
-        setFilterExp(e);
-    };
 
     const handleLoadMore = () => {
         setIsFetching(true);
@@ -140,7 +139,16 @@ const FindJobs: React.FC<FindJobsProps> = () => {
 
 
 
+    {/*upload button*/}
+    const [openModal, setOpenModal] = useState(false);
 
+    const handleOpenModal = () => {
+        setOpenModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setOpenModal(false);
+    }
     return (
 
         <div className="mt-16 bg-gradient-to-t from-stone-100 via-purple-300 to-blue-200">
@@ -179,34 +187,7 @@ const FindJobs: React.FC<FindJobsProps> = () => {
                         </div>
                     </div>
 
-                    {/* Experience Filter */}
-                    <div className='py-2 mt-4'>
-                        <div className='flex justify-between mb-3'>
-                            <p className='flex items-center gap-2 font-semibold'>
-                                <GrUserExpert/>
-                                Experience
-                            </p>
-
-                            <button onClick={() => toggleVisibility('experience')}
-                                    className='text-slate-600 hover:text-slate-800'>
-                                {isExperienceHidden ? <MdOutlineKeyboardArrowDown/> : <MdOutlineKeyboardArrowUp/>}
-                            </button>
-                        </div>
-
-                        <div className={`flex flex-col gap-2 ${isExperienceHidden ? 'hidden' : ''}`}>
-                            {experience.map((exp) => (
-                                <div key={exp.title} className='flex items-center gap-3'>
-                                    <input
-                                        type='checkbox'
-                                        value={exp?.value}
-                                        className='w-4 h-4 text-indigo-600 focus:ring-indigo-500'
-                                        onChange={(e) => filterExperience([e.target.value])}
-                                    />
-                                    <span>{exp.title}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+                    
 
                     {/* Job Location */}
                     <div className='py-2 mt-4'>
@@ -277,7 +258,26 @@ const FindJobs: React.FC<FindJobsProps> = () => {
                             <p className='text-sm md:text-base'>Sort By:</p>
 
                             <ListBox sort={sort} setSort={handleSortChange}/>
+
                         </div>
+
+                    </div>
+                    <div className="my-6">
+                        <CustomButton
+                            onClick={handleOpenModal}
+                            title='Upload Job'
+                            containerStyles={` flex items-center justify-center text-white bg-black py-3 px-5 outline-none rounded-full text-base`}
+                        />
+
+                        <Modal
+                            open={openModal}
+                            onClose={handleCloseModal}
+                            aria-labelledby="modal-title"
+                            aria-describedby="modal-description"
+                            className="overflow-scroll"
+                        >
+                            <UploadJob />
+                        </Modal>
                     </div>
 
                     <div className="w-full flex flex-wrap gap-4">

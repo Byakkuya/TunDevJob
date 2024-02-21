@@ -49,7 +49,7 @@ export const mockCompanies: Company[] = [
         contact: '777-888-9999',
         about: 'We are the giants in the tech industry.',
         profileUrl: logo,
-        jobPosts: ["1", "2"],
+jobPosts: ["1", "2"],
     },
     {
         _id: 6,
@@ -62,3 +62,5 @@ export const mockCompanies: Company[] = [
         jobPosts: ["1", "2"],
     },
 ];
+
+
