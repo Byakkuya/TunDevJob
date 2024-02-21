@@ -6,8 +6,21 @@ import { mockJobs } from "../core/mocks/Jobs";
 import JobCard from "../components/JobCard";
 import CustomButton from "../components/CustomButton";
 import {RiVerifiedBadgeFill} from "react-icons/ri";
+import {Modal} from "@material-ui/core";
+import App from "../App";
+import ApplyJob from "../components/ApplyJob";
 
 const JobDetail: React.FC = () => {
+    const [openModal, setOpenModal] = useState(false);
+
+    const handleOpenModal = () => {
+        setOpenModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setOpenModal(false);
+    }
+
     const params = useParams<{ id?: string }>();
     const id = parseInt(params.id || "0") - 1;
     const [job, setJob] = useState(mockJobs[0]);
@@ -23,7 +36,6 @@ const JobDetail: React.FC = () => {
             <button className="bg-black -500 text-white py-2 px-4 mb-5 rounded">Back to Find Jobs</button>
         </Link>
     );
-
 
 
 
@@ -88,20 +100,31 @@ const JobDetail: React.FC = () => {
                         )}
                     </div>
 
-                    <Link to={`/apply/${job?.id}`}>
-                        <div className='w-full'>
+
+                        <div>
                             <CustomButton
-                                onClick={() => setSelected("0")}
+                                onClick={handleOpenModal}
                                 title='Apply Now'
                                 containerStyles={`w-full flex items-center justify-center text-white bg-black py-3 px-5 outline-none rounded-full text-base`}
                             />
                         </div>
-                    </Link>
+
+
+                    <Modal
+                        open={openModal}
+                        onClose={handleCloseModal}
+                        aria-labelledby="modal-title"
+                        aria-describedby="modal-description"
+                    >
+                    <ApplyJob />
+                    </Modal>
                 </div>
 
                 {/* Right Card for Company Information */}
+
                 <div className='w-full md:w-1/3 bg-blue-100 via-opacity-30  p-4 md:rounded-xl md:p-6 px-5 py- md:px-10 shadow-md'
                 >
+                    <Link to={`/company-profile/${job?.company?._id}`}>
                     <div className='mb-6 flex flex-col'>
                         {job?.company?.profileUrl && (
                             <img
@@ -120,13 +143,15 @@ const JobDetail: React.FC = () => {
 
                     <p className='text-xl font-semibold'>About Company</p>
                     <span>{job?.company?.about}</span>
+                    </Link>
                 </div>
+
 
             </div>
         </div>
 
 
-            <div className='w-full mx-6' >
+            <div className='w-full mx-6 py-6' >
 <h1 className='text-3xl font-semibold mb-5'>Related Jobs</h1>
 
                 <div className='w-full flex flex-auto gap-5 mt-8'>
