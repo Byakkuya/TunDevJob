@@ -40,10 +40,9 @@ const Offers = () => {
                                     <h2 className="text-4xl text-neutral-700 font-semibold mb-4 md:w-4/5">As An Enterprise
                                         you can ....</h2>
                                     <p className="md:w-3/4 text-sm text-neutral-600 mb-8">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis metus rhoncus,
-                                        dapibus nibh sagittis, posuere magna. In hac habitasse platea dictumst. Aliquam
-                                        sodales eu eros non maximus. Nulla tincidunt eu risus eu pellentesque. Duis a
-                                        leo nec nisl molestie sollicitudin
+                                        Post Offers with details so you can find the best fit for
+                                        your company
+
                                     </p>
 
                                 </div>

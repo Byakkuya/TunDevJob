@@ -20,7 +20,7 @@ const Why = () => {
           items-center flex justify-center hover:-translate-y-4 transition-all duration-300 cursor-pointer">
                             <div>
                                 <img src={amico} alt=""/>
-                                <h5 className="text-2xl font-semibold text-black px-5 text-center mt-5">Reason 1 </h5>
+                                <h5 className="text-2xl font-semibold text-black px-5 text-center mt-5"></h5>
 
                             </div>
                         </div>
@@ -30,7 +30,7 @@ const Why = () => {
           items-center flex justify-center hover:-translate-y-4 transition-all duration-300 cursor-pointer md:mt-16">
                             <div>
                                 <img src={amico} alt=""/>
-                                <h5 className="text-2xl font-semibold text-black px-5 text-center mt-5">Reason 2</h5>
+                                <h5 className="text-2xl font-semibold text-black px-5 text-center mt-5"></h5>
                             </div>
                         </div>
 

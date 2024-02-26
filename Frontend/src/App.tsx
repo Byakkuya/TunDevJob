@@ -18,6 +18,7 @@ import Login from "./components/Login";
 import Signup from "./components/signup";
 import SignupCompany from "./components/SignupCompany";
 import SignupDeveloper from "./components/SignupDeveloper";
+import ApplyJob from "./components/ApplyJob";
 
 const user = {
     user: {
@@ -53,6 +54,7 @@ function App() {
                         <Route path="/Company-profile/:id" element={<CompanyProfile/>} />
                         <Route path="/upload-job" element={<UploadJob/>}/>
                         <Route path="/job-detail/:id" element={<JobDetail/>}/>
+                        <Route path="apply/:id" element={<ApplyJob/>}/>
 
                     </Route>
 
@@ -62,6 +64,7 @@ function App() {
                     <Route path="/signup" element={<Signup/>}/>
                     <Route path="/signup/developer" element={<SignupDeveloper/>}/>
                     <Route path="/signup/company" element={<SignupCompany/>}/>
+
 
 
                 </Routes>
