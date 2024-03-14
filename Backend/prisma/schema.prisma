@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+// Developer model representing users who are developers
+model Developer {
+  id          Int           @id @default(autoincrement())
+  email       String        @unique
+  password    String
+  name        String
+  skills      String[]
+  createdAt   DateTime      @default(now())
+  applications Application[]
+  // Feedbacks given by developers
+  feedbacks   Feedback[]
+}
+
+// Company model representing companies posting jobs
+model Company {
+  id          Int           @id @default(autoincrement())
+  name        String
+  email       String        @unique
+  password    String
+  description String
+  website     String?
+  createdAt   DateTime      @default(now())
+  jobs        Job[]         // A company can have multiple jobs
+  // Feedbacks received by companies
+  feedbacks   Feedback[]
+}
+
+// Job model representing job postings by companies
+model Job {
+  id            Int         @id @default(autoincrement())
+  title         String
+  description   String
+  company       Company     @relation(fields: [companyId], references: [id])
+  companyId     Int
+  location      String
+  requirements  String[]
+  salary        Float
+  createdAt     DateTime    @default(now())
+  applications  Application[]
+}
+
+// Application model representing applications made by developers to jobs
+model Application {
+  id            Int         @id @default(autoincrement())
+  job           Job         @relation(fields: [jobId], references: [id])
+  jobId         Int
+  developer     Developer   @relation(fields: [developerId], references: [id])
+  developerId   Int
+  status        String      // This can be 'applied', 'rejected', 'accepted', etc.
+  coverLetter   String?     // Optional cover letter for the application
+  appliedAt     DateTime    @default(now())
+}
+
+// Feedback model representing feedback given by developers to companies
+model Feedback {
+  id            Int         @id @default(autoincrement())
+  company       Company     @relation(fields: [companyId], references: [id])
+  companyId     Int
+  developer     Developer   @relation(fields: [developerId], references: [id])
+  developerId   Int
+  rating        Int         // Rating given by the developer (1-5)
+  comment       String?     // Optional comment provided by the developer
+  createdAt     DateTime    @default(now())
+}
