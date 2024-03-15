@@ -1,0 +1,125 @@
+import express, { Request, Response } from 'express';
+import { PrismaClient } from '@prisma/client';
+import { PORT } from './secrets';
+const prisma = new PrismaClient();
+const app = express();
+app.use(express.json());
+
+
+
+// Define a route for signing up a developer
+app.post('/signup/developer', async (req: Request, res: Response) => {
+  try {
+    // Extract data from the request body
+    const { email, password, name, skills } = req.body;
+    //make sure that the email is unique
+    const existingDeveloper = await prisma.developer.findUnique({
+      where: { email },
+    });
+    if (existingDeveloper) {
+      return res.status(400).json({ error: 'Developer with this email already exists' });
+    }
+
+    // Create a new developer in the database
+    const newDeveloper = await prisma.developer.create({
+      data: {
+        email,
+        password,
+        name,
+        skills: { set: skills }, // Assuming skills is an array of strings
+      },
+    });
+
+    res.status(201).json({ message: 'Developer signed up successfully', developer: newDeveloper });
+  } catch (error) {
+    console.error('Error signing up developer:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+//get all developers
+app.get('/developers', async (req: Request, res: Response) => {
+  try {
+    const developers = await prisma.developer.findMany();
+    res.status(200).json(developers);
+  } catch (error) {
+    console.error('Error getting developers:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+//get a developer by id
+app.get('/developers/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const developer = await prisma.developer.findUnique({
+      where: { id: parseInt(id) },
+    });
+    if (!developer) {
+      return res.status(404).json({ error: 'Developer not found' });
+    }
+    res.status(200).json(developer);
+  } catch (error) {
+    console.error('Error getting developer:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+
+// Define a route for signing up a company
+app.post('/signup/company', async (req: Request, res: Response) => {
+  try {
+    // Extract data from the request body
+    const { email, password, name, description } = req.body;
+
+    // Create a new company in the database
+    const newCompany = await prisma.company.create({
+      data: {
+        email,
+        password,
+        name,
+        description,
+        
+      },
+    });
+
+    res.status(201).json({ message: 'Company signed up successfully', company: newCompany });
+  } catch (error) {
+    console.error('Error signing up company:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+//get all companies
+app.get('/companies', async (req: Request, res: Response) => {
+  try {
+    const companies = await prisma.company.findMany();
+    res.status(200).json(companies);
+  } catch (error) {
+    console.error('Error getting companies:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+//get a company by id
+app.get('/companies/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const company = await prisma.company.findUnique({
+      where: { id: parseInt(id) },
+    });
+    if (!company) {
+      return res.status(404).json({ error: 'Company not found' });
+    }
+    res.status(200).json(company);
+  } catch (error) {
+    console.error('Error getting company:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Start the server
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});

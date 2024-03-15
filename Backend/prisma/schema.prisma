@@ -13,66 +13,79 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 // Developer model representing users who are developers
 model Developer {
-  id            Int          @id @default(autoincrement())
-  email         String       @unique
-  password      String
-  name          String
-  skills        String[]
-  createdAt     DateTime     @default(now())
-  applications  Application[]
-  testimonials  Testimonial[]
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  password     String
+  name         String
+  skills       String[]
+  createdAt    DateTime      @default(now())
+  applications Application[]
+  testimonials Testimonial[]
 }
 
 // Company model representing companies posting jobs
 model Company {
-  id            Int          @id @default(autoincrement())
-  name          String
-  email         String       @unique
-  password      String
-  description   String
-  website       String?
-  createdAt     DateTime     @default(now())
-  jobs          Job[]        // A company can have multiple jobs
-  testimonials  Testimonial[]
+  id           Int           @id @default(autoincrement())
+  name         String
+  email        String        @unique
+  password     String
+  description  String
+  website      String?
+  createdAt    DateTime      @default(now())
+  jobs         Job[] // A company can have multiple jobs
+  testimonials Testimonial[]
 }
 
 // Job model representing job postings by companies
 model Job {
-  id            Int          @id @default(autoincrement())
-  title         String
-  description   String
-  company       Company      @relation(fields: [companyId], references: [id])
-  companyId     Int
-  location      String
-  requirements  String[]
-  salary        Float
-  createdAt     DateTime     @default(now())
-  applications  Application[]
+  id           Int           @id @default(autoincrement())
+  title        String
+  description  String
+  company      Company       @relation(fields: [companyId], references: [id])
+  companyId    Int
+  location     String
+  requirements String[]
+  salary       Float
+  createdAt    DateTime      @default(now())
+  applications Application[]
 }
 
 // Application model representing applications made by developers to jobs
 model Application {
-  id            Int          @id @default(autoincrement())
-  job           Job          @relation(fields: [jobId], references: [id])
-  jobId         Int
-  developer     Developer    @relation(fields: [developerId], references: [id])
-  developerId   Int
-  status        String       // This can be 'applied', 'rejected', 'accepted', etc.
-  coverLetter   String?      // Optional cover letter for the application
-  appliedAt     DateTime     @default(now())
+  id          Int       @id @default(autoincrement())
+  job         Job       @relation(fields: [jobId], references: [id])
+  jobId       Int
+  developer   Developer @relation(fields: [developerId], references: [id])
+  developerId Int
+  status      String // This can be 'applied', 'rejected', 'accepted', etc.
+  coverLetter String? // Optional cover letter for the application
+  appliedAt   DateTime  @default(now())
 }
 
 // Testimonial model representing testimonials provided by developers for companies
 model Testimonial {
-  id            Int          @id @default(autoincrement())
-  developer     Developer    @relation(fields: [developerId], references: [id])
-  developerId   Int
-  company       Company      @relation(fields: [companyId], references: [id])
-  companyId     Int
-  text          String       // The text content of the testimonial
-  rating        Float        // Rating provided by the developer (optional)
-  createdAt     DateTime     @default(now())
+  id          Int       @id @default(autoincrement())
+  developer   Developer @relation(fields: [developerId], references: [id])
+  developerId Int
+  company     Company   @relation(fields: [companyId], references: [id])
+  companyId   Int
+  text        String // The text content of the testimonial
+  rating      Float // Rating provided by the developer (optional)
+  createdAt   DateTime  @default(now())
+}
+
+// User model representing users
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  role     Role // Enum for user role
+}
+
+// Enum for user role
+enum Role {
+  DEVELOPER
+  COMPANY
 }
