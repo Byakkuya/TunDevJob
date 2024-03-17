@@ -13,29 +13,66 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// User model representing users
+model User {
+  id         Int        @id @default(autoincrement())
+  email      String     @unique
+  password   String
+  role       Role       // Enum for user role
+  developer  Developer? // One-to-one relation with Developer model
+  company    Company?   // One-to-one relation with Company model
+  admin      Admin?     // One-to-one relation with Admin model
+}
+
 // Developer model representing users who are developers
 model Developer {
   id           Int           @id @default(autoincrement())
-  email        String        @unique
-  password     String
+  userId       Int           @unique
   name         String
-  skills       String[]
+  number       String
+  city         String
+  zipcode      String
+  currentPosition String
+  profilePicture String
+  github       String
+  linkedin     String
+  fullAddress  String
+  Resume       String
   createdAt    DateTime      @default(now())
   applications Application[]
   testimonials Testimonial[]
+
+  // Define a relation to the User model
+  user         User          @relation(fields: [userId], references: [id])
 }
 
 // Company model representing companies posting jobs
 model Company {
   id           Int           @id @default(autoincrement())
+  userId       Int           @unique
   name         String
-  email        String        @unique
-  password     String
+  number       String
+  city         String
+  zipcode      String
+  fullAddress  String
   description  String
+  logo         String
   website      String?
+  linkedin     String?
   createdAt    DateTime      @default(now())
-  jobs         Job[] // A company can have multiple jobs
+  jobs         Job[]         // A company can have multiple jobs
   testimonials Testimonial[]
+  reports      Report[]      // A company can report bad testimonials
+
+  // Define a relation to the User model
+  user         User          @relation(fields: [userId], references: [id])
+}
+
+// Admin model representing administrators
+model Admin {
+  id         Int       @id @default(autoincrement())
+  userId     Int       @unique
+  user       User      @relation(fields: [userId], references: [id])
 }
 
 // Job model representing job postings by companies
@@ -71,21 +108,26 @@ model Testimonial {
   developerId Int
   company     Company   @relation(fields: [companyId], references: [id])
   companyId   Int
-  text        String // The text content of the testimonial
-  rating      Float // Rating provided by the developer (optional)
+  text        String    // The text content of the testimonial
+  rating      Float     // Rating provided by the developer (optional)
   createdAt   DateTime  @default(now())
+  reports     Report[]  // Testimonial can be reported by companies
 }
 
-// User model representing users
-model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  password String
-  role     Role // Enum for user role
+// Report model representing reports made by companies
+model Report {
+  id            Int        @id @default(autoincrement())
+  company       Company    @relation(fields: [companyId], references: [id])
+  companyId     Int
+  testimonial   Testimonial@relation(fields: [testimonialId], references: [id])
+  testimonialId Int
+  reason        String     // Reason for reporting the testimonial
+  createdAt     DateTime   @default(now())
 }
 
 // Enum for user role
 enum Role {
   DEVELOPER
   COMPANY
+  ADMIN
 }
