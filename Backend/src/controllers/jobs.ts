@@ -48,7 +48,8 @@ export const getJob = async (req: Request, res: Response) => {
                 id: jobId,
             },
             include: {
-                company: true // Include company details associated with the job
+                company: true, // Include company details associated with the job
+                
             }
         });
 

@@ -1,13 +1,15 @@
 import { Router } from "express";
 import { uploadJob, deleteJob, getJobs, updateJob, getJob, applyJob } from "../controllers/jobs";
+import { authenticate } from '../middlewares/auth';
+import { restrictTo } from '../middlewares/roles';
 
 const jobRoutes = Router();
 
-jobRoutes.post('/uploadjob', uploadJob);
-jobRoutes.get('/', getJobs);
+jobRoutes.post('/uploadjob',authenticate, restrictTo('DEVELOPER'),uploadJob);
+jobRoutes.get('/' , getJobs);
 jobRoutes.get('/:jobId', getJob);
-jobRoutes.put('/:jobId', updateJob);
-jobRoutes.delete('/:jobId', deleteJob);
-jobRoutes.post('/applyjob/:jobId', applyJob);
+jobRoutes.put('/:jobId', authenticate, restrictTo('COMPANY'), updateJob);
+jobRoutes.delete('/:jobId', authenticate,restrictTo('COMPANY'),restrictTo('ADMIN'), deleteJob);
+jobRoutes.post('/applyjob/:jobId', authenticate, restrictTo('Developer') ,applyJob);
 
 export default jobRoutes;

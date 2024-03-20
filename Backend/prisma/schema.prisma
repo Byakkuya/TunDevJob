@@ -122,6 +122,7 @@ model Report {
   testimonial   Testimonial@relation(fields: [testimonialId], references: [id])
   testimonialId Int
   reason        String     // Reason for reporting the testimonial
+  status        status     // Status of the report
   createdAt     DateTime   @default(now())
 }
 
@@ -130,4 +131,9 @@ enum Role {
   DEVELOPER
   COMPANY
   ADMIN
+}
+enum status {
+  PENDING
+  APPROVED
+  REJECTED
 }
