@@ -43,7 +43,7 @@ model Developer {
   testimonials Testimonial[]
 
   // Define a relation to the User model
-  user         User          @relation(fields: [userId], references: [id])
+  user         User          @relation(fields: [userId], references: [id],onDelete: Cascade)
 }
 
 // Company model representing companies posting jobs
@@ -65,7 +65,7 @@ model Company {
   reports      Report[]      // A company can report bad testimonials
 
   // Define a relation to the User model
-  user         User          @relation(fields: [userId], references: [id])
+  user         User          @relation(fields: [userId], references: [id],onDelete: Cascade)
 }
 
 // Admin model representing administrators
@@ -80,7 +80,7 @@ model Job {
   id           Int           @id @default(autoincrement())
   title        String
   description  String
-  company      Company       @relation(fields: [companyId], references: [id])
+  company      Company       @relation(fields: [companyId], references: [id],onDelete: Cascade)
   companyId    Int
   location     String
   requirements String[]
@@ -92,9 +92,9 @@ model Job {
 // Application model representing applications made by developers to jobs
 model Application {
   id          Int       @id @default(autoincrement())
-  job         Job       @relation(fields: [jobId], references: [id])
+  job         Job       @relation(fields: [jobId], references: [id],onDelete: Cascade)
   jobId       Int
-  developer   Developer @relation(fields: [developerId], references: [id])
+  developer   Developer @relation(fields: [developerId], references: [id],onDelete: Cascade)
   developerId Int
   status      String // This can be 'applied', 'rejected', 'accepted', etc.
   coverLetter String? // Optional cover letter for the application
@@ -104,9 +104,9 @@ model Application {
 // Testimonial model representing testimonials provided by developers for companies
 model Testimonial {
   id          Int       @id @default(autoincrement())
-  developer   Developer @relation(fields: [developerId], references: [id])
+  developer   Developer @relation(fields: [developerId], references: [id],onDelete: Cascade)
   developerId Int
-  company     Company   @relation(fields: [companyId], references: [id])
+  company     Company   @relation(fields: [companyId], references: [id],onDelete: Cascade)
   companyId   Int
   text        String    // The text content of the testimonial
   rating      Float     // Rating provided by the developer (optional)
@@ -117,9 +117,9 @@ model Testimonial {
 // Report model representing reports made by companies
 model Report {
   id            Int        @id @default(autoincrement())
-  company       Company    @relation(fields: [companyId], references: [id])
+  company       Company    @relation(fields: [companyId], references: [id],onDelete: Cascade)
   companyId     Int
-  testimonial   Testimonial@relation(fields: [testimonialId], references: [id])
+  testimonial   Testimonial@relation(fields: [testimonialId], references: [id],onDelete: Cascade)
   testimonialId Int
   reason        String     // Reason for reporting the testimonial
   status        status     // Status of the report
