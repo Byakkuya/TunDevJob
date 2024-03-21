@@ -124,8 +124,8 @@ export const applyJob = async (req: Request, res: Response) => {
         if (!job) {
             return res.status(404).json({ error: 'Job not found' });
         }
-
-        // Check if the developer exists
+        
+        // Check if the user is developer
         const developer = await prismaclient.developer.findUnique({
             where: {
                 id: developerId
