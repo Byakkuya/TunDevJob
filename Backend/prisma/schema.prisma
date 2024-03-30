@@ -111,7 +111,7 @@ model Testimonial {
   text        String    // The text content of the testimonial
   rating      Float     // Rating provided by the developer (optional)
   createdAt   DateTime  @default(now())
-  reports     Report[]  // Testimonial can be reported by companies
+  reports     Report[]  // Testimonial cacn be reported by companies
 }
 
 // Report model representing reports made by companies

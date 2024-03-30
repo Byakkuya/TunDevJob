@@ -1,11 +1,9 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { prismaclient } from '..';
 import {compareSync, hashSync} from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../secrets';
-import { BadRequest } from '../exceptions/bad-requests';
-import { ErrorCode } from '../exceptions/root';
-import bcrypt from 'bcrypt';
+
 
 export const signupDeveloper = async (req: Request, res: Response) => {
     const {email, password, name, number, city, zipcode, currentPosition, profilePicture, github, linkedin, fullAddress, Resume} = req.body;

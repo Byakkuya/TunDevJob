@@ -14,11 +14,12 @@ import CompanyProfile from "./pages/CompanyProfile";
 import UploadJob from "./pages/UploadJob";
 import JobDetail from "./pages/JobDetail";
 import Footer from "./components/Footer";
-import Login from "./components/Login";
+import Login from "./pages/Login";
 import Signup from "./components/signup";
 import SignupCompany from "./components/SignupCompany";
 import SignupDeveloper from "./components/SignupDeveloper";
 import ApplyJob from "./components/ApplyJob";
+import NotFound from './components/NotFound';
 
 const user = {
     user: {
@@ -64,6 +65,7 @@ function App() {
                     <Route path="/signup" element={<Signup/>}/>
                     <Route path="/signup/developer" element={<SignupDeveloper/>}/>
                     <Route path="/signup/company" element={<SignupCompany/>}/>
+                    <Route path="*" element={<NotFound/>}/>
 
 
 

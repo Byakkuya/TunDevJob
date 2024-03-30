@@ -16,6 +16,8 @@ import {Modal} from "@material-ui/core";
 import UploadJob from "./UploadJob";
 interface FindJobsProps {}
 
+// make a axois get request to backend end point to get all jobs
+
 
 
 
