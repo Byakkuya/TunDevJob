@@ -14,9 +14,10 @@ import JobCard from "../components/JobCard";
 import ListBox from "../components/ListBox";
 import {Modal} from "@material-ui/core";
 import UploadJob from "./UploadJob";
+import { useAppSelector } from "../shared/store/hook";
 interface FindJobsProps {}
 
-// make a axois get request to backend end point to get all jobs
+
 
 
 
@@ -151,6 +152,14 @@ const FindJobs: React.FC<FindJobsProps> = () => {
     const handleCloseModal = () => {
         setOpenModal(false);
     }
+
+    const { user} = useAppSelector((state) => state.auth.auth);
+    //@ts-ignore
+    const Role = user?.role;
+    const isDeveloper = Role === 'DEVELOPER';
+    const isCompany = Role === 'COMPANY';
+
+
     return (
 
         <div className="mt-16 bg-gradient-to-t from-stone-100 via-purple-300 to-blue-200">
@@ -264,29 +273,34 @@ const FindJobs: React.FC<FindJobsProps> = () => {
                         </div>
 
                     </div>
-                    <div className="my-6">
-                        <CustomButton
-                            onClick={handleOpenModal}
-                            title='Upload Job'
-                            containerStyles={` flex items-center justify-center text-white bg-black py-3 px-5 outline-none rounded-full text-base`}
-                        />
+                    {isCompany? (
+                    <>
+                        <div className="my-6">
+                            <CustomButton
+                                onClick={handleOpenModal}
+                                title='Upload Job'
+                                containerStyles={` flex items-center justify-center text-white bg-black py-3 px-5 outline-none rounded-full text-base`}
+                            /> 
+                            
 
-                        <Modal
-                            open={openModal}
-                            onClose={handleCloseModal}
-                            aria-labelledby="modal-title"
-                            aria-describedby="modal-description"
-                            className="overflow-scroll"
-                        >
-                            <UploadJob />
-                        </Modal>
-                    </div>
-
-                    <div className="w-full flex flex-wrap gap-4">
-                        {visibleJobs.map((job, index) => (
-                            <JobCard job={job} key={index}/>
-                        ))}
-                    </div>
+                            <Modal
+                                open={openModal}
+                                onClose={handleCloseModal}
+                                aria-labelledby="modal-title"
+                                aria-describedby="modal-description"
+                                className="overflow-scroll"
+                            >
+                                <UploadJob />
+                            </Modal>
+                        </div>
+                        </>
+                        ) : null}
+                        <div className="w-full flex flex-wrap gap-4">
+                            {visibleJobs.map((job, index) => (
+                                <JobCard job={job} key={index}/>
+                            ))}
+                        </div>
+                   
 
                     {totalPages > 1 && (
                         <div className="w-full flex items-center justify-center pt-8">

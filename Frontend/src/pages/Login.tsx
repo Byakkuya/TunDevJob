@@ -6,12 +6,17 @@ import { axiosInstance } from '../lib/axios';
 import { message , Button } from 'antd';
 import { useMutation } from '@tanstack/react-query';
 import { LogIn } from '../core/models/LogIn';
+import { jwtDecode } from 'jwt-decode';
+import { useAppDispatch } from '../shared/store/hook';
+import { login } from '../shared/store/reducers/auth';
+
 
 
 
 const Login = () => {
    
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     const { mutate, isPending } = useMutation(
         {
@@ -21,6 +26,10 @@ const Login = () => {
           },
           onSuccess(data, variables, context) {
             navigate('/Find-jobs');
+            const decodedToken = jwtDecode(data.token);
+            dispatch(login({user: decodedToken, token: data.token }));
+
+
             message.success({
               content: 'Login Successful',
               duration: 3, // Display duration in seconds
@@ -34,7 +43,8 @@ const Login = () => {
             if (error.response && error.response.status === 401) {
               // Handle unauthorized access error
               message.error({
-                content: 'Unauthorized access. Please check your credentials.',
+                //@ts-ignore
+                content: error.response.data.error,
                 duration: 3,
                 style: {
                   marginTop: '10vh',

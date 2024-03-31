@@ -1,14 +1,23 @@
 import React, {useEffect, useState} from 'react';
-import { Link} from 'react-router-dom';
+import { Link, useNavigate} from 'react-router-dom';
 import logo from "../assets/img/logo.png"
 import {FaXmark, FaBars} from "react-icons/fa6"
+import { useAppDispatch, useAppSelector } from '../shared/store/hook';
+import { logout } from '../shared/store/reducers/auth';
+import { set } from 'react-hook-form';
 
 const Navbar=()=>{
-    const user = {
-        user: {
-            accountType: "Developer"
-        }
+
+    const {user} = useAppSelector((state) => state.auth.auth);
+    const {isAuthenticated} = useAppSelector((state) => state.auth.auth);
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const Logout = () => {
+       
+        dispatch(logout());
+        navigate('/home');
     }
+
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isSticky, setIsSticky] = useState(false);
     
@@ -66,7 +75,34 @@ const Navbar=()=>{
                         ))}
                     </ul>
 
+
                     {/* Buttons for large devices */}
+                    
+                    {isAuthenticated ? (
+                        <div className="sm:flex ssm:flex space-x-12 hidden lg:flex items-center">
+                            <a href="/profile" className="transition-colors text-blue-gray-900 hover:text-blue-500 focus:text-blue-500">
+                                Profile
+                            </a>
+                            <button  className="transition-colors text-blue-gray-900 hover:text-blue-500 focus:text-blue-500" onClick={Logout}>
+                                Logout
+                            </button>
+                        </div>
+                    ) : (
+                        <div className=" sm:flex ssm:flex space-x-12 hidden lg:flex items-center">
+                            <a href="/login" className="transition-colors text-blue-gray-900 hover:text-blue-500 focus:text-blue-500">
+                                Login
+                            </a>
+                            <a href="/signup">
+                                <button
+                                    className="bg-indigo-950 text-white py-2 px-4 transition-all duration-300 rounded hover:bg-indigo-200">
+                                    Sign Up
+                                </button>
+                            </a>
+                        </div>
+                    )}
+
+                    {/* Menu button for mobile devices *
+
                     <div className=" sm:flex ssm:flex space-x-12 hidden lg:flex items-center">
                         <a href="/login" className="transition-colors text-blue-gray-900 hover:text-blue-500 focus:text-blue-500">
                             Login
@@ -78,7 +114,7 @@ const Navbar=()=>{
                         </button>
                     </a>
                     </div>
-
+                    */}
                     {/* Menu button for mobile devices */}
                     <div className="md:hidden">
                         <button onClick={toggleMenu}>

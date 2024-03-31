@@ -20,14 +20,22 @@ import SignupCompany from "./components/SignupCompany";
 import SignupDeveloper from "./components/SignupDeveloper";
 import ApplyJob from "./components/ApplyJob";
 import NotFound from './components/NotFound';
+import PrivateRoute from "./components/PrivateRoute";
+import { useAppSelector } from './shared/store/hook';
 
-const user = {
-    user: {
-        accountType: "Developer"
-    }
-};
+
+
+
+
+
 
 function App() {
+    const {user} = useAppSelector((state) => state.auth.auth);
+    
+    //@ts-ignore
+    const role = user?.role;
+
+
     function Layout () {
         const location = useLocation();
         return user? (<Outlet/>) : (<Navigate to='/login' state={{from: location}} replace={true} />);
@@ -39,18 +47,18 @@ function App() {
                 <Routes>
                     <Route element={<Layout />}>
                         <Route path='/' element={<Navigate to='/home' replace={true}/>}/>
-                        <Route path="/find-jobs" element={<FindJobs/>}/>
-                        <Route path="/Companies" element={<Companies/>}/>
-                        {/*}
+                        <Route path="/find-jobs" element={<PrivateRoute> <FindJobs/> </PrivateRoute>}/>
+                        <Route path="/Companies" element={<PrivateRoute> <Companies/> </PrivateRoute>}/>
+                        
                         <Route
                             path={
-                                user?.user?.accountType === "Developer"
+                                role === "DEVELOPER"
                                     ? "/profile"
                                     : "/profile/:id"
                             }
                             element={<Profile/>}
                         />
-                        */}
+                        
                         <Route path="/Company-profile" element={<CompanyProfile/>}/>
                         <Route path="/Company-profile/:id" element={<CompanyProfile/>} />
                         <Route path="/upload-job" element={<UploadJob/>}/>
