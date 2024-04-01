@@ -104,8 +104,11 @@ model Application {
 // Testimonial model representing testimonials provided by developers for companies
 model Testimonial {
   id          Int       @id @default(autoincrement())
+  userId      Int       // The user who provided the testimonial
   developer   Developer @relation(fields: [developerId], references: [id],onDelete: Cascade)
   developerId Int
+  developerName String 
+  developerProfilePicture String
   company     Company   @relation(fields: [companyId], references: [id],onDelete: Cascade)
   companyId   Int
   text        String    // The text content of the testimonial
@@ -137,3 +140,4 @@ enum status {
   APPROVED
   REJECTED
 }
+

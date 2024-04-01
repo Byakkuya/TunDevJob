@@ -1,12 +1,10 @@
+import { CircularProgress } from "@material-ui/core";
+
 const Loading = () => {
     return (
-        <div className='dots-container'>
-            <div className='dot'></div>
-            <div className='dot'></div>
-            <div className='dot'></div>
-            <div className='dot'></div>
-            <div className='dot'></div>
-        </div>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                    <CircularProgress />
+                </div>
     );
 };
 

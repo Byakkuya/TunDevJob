@@ -4,10 +4,11 @@ import ReviewCard from './ReviewCard';
 interface ReviewsListProps {
     reviews: {
         id: number;
-        name: string;
-        photo: string;
+        developerName: string;
+        developerProfilePicture: string;
         rating: number;
-        comment: string;
+        text: string;
+        userId: number;
     }[];
 }
 
@@ -22,25 +23,30 @@ const ReviewsList: React.FC<ReviewsListProps> = ({ reviews }) => {
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
 
-    const handleAddReview = (newReview: { name: string; photo: string; rating: number; comment: string }) => {
+    const handleAddReview = (newReview: { name: string; photo: string; rating: number; comment: string, userId : number }) => {
         // Add the new review to the existing list
         // (You may want to use a state management library like Redux for better state management)
         reviews.push({
             id: reviews.length + 1,
             ...newReview,
+            text: '',
+            developerName: newReview.name,
+            developerProfilePicture: newReview.photo,
+
         });
     };
 
     return (
         <div className="grid grid-cols-1 gap-4">
-            {currentReviews.map((review) => (
+            {currentReviews.reverse().map((review) => (
                 <div key={review.id} className="bg-slate-50 p-4 rounded-lg shadow-md ">
                     <ReviewCard
                         id={review.id}
-                        name={review.name}
-                        photo={review.photo}
+                        developerName={review.developerName}
+                        photo={review.developerProfilePicture}
                         rating={review.rating}
-                        comment={review.comment}
+                        comment={review.text}
+                        userId={review.userId} // Add this line
                     />
                 </div>
             ))}

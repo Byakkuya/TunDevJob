@@ -1,54 +1,59 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
 
 import CompanyCard from "../components/CompanyCard";
-
 import Loading from "../components/Loading";
 import ListBox from "../components/ListBox";
-import { mockCompanies } from "../core/mocks/Companies";
+import { useAppSelector } from "../shared/store/hook";
+import { useQuery } from "@tanstack/react-query";
+import { axiosInstance } from "../lib/axios";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Companies = () => {
+    const { user } = useAppSelector((state) => state.auth.auth);
+    //@ts-ignore
+    const Role = user?.role;
+    const isDeveloper = Role === 'DEVELOPER';
+    const isCompany = Role === 'COMPANY';
 
-    const [recordsCount, setRecordsCount] = useState(0);
-    const [data, setData] = useState(mockCompanies ?? []);
     const [sort, setSort] = useState("Newest");
-    const [isFetching, setIsFetching] = useState(false);
+    const { data: companies, isLoading } = useQuery({
+        queryKey: ["companies"],
+        queryFn: async () => {
+            const response = await axiosInstance.get("/companies");
+            return response.data;
+        },
 
+    });
+    
+    //number of companies available
+    const numberOfCompanies = companies?.length;
 
     return (
         <div className='mt-10 container mx-auto flex flex-col gap-5 2xl:gap-10 px-5 md:px-0 py-6 w-full '>
             <div className='flex items-center justify-between mb-4'>
                 <p className='text-sm md:text-base'>
-                        Showing: <span className='font-semibold'>500</span> Companies
-                        Available
-                    </p>
+                    Showing: <span className='font-semibold'> {numberOfCompanies}</span> Companies Available
+                </p>
 
-                    <div className='flex flex-col md:flex-row gap-0 md:gap-2 md:items-center'>
-                        <p className='text-sm md:text-base'>Sort By:</p>
-
-                        <ListBox sort={sort} setSort={setSort} />
-                    </div>
+                <div className='flex flex-col md:flex-row gap-0 md:gap-2 md:items-center'>
+                    <p className='text-sm md:text-base'>Sort By:</p>
+                    <ListBox sort={sort} setSort={setSort} />
                 </div>
-
-                <div className='w-full flex flex-col gap-6'>
-                    {data?.map((cmp, index) => (
-                        <CompanyCard cmp={cmp} key={index} />
-                    ))}
-
-                    {isFetching && (
-                        <div className='mt-10'>
-                            <Loading />
-                        </div>
-                    )}
-                    {/*}
-                    <p className='text-sm text-right'>
-                        {data?.length} records out of {recordsCount}
-                    </p>
-                    */}
-                </div>
-
-
             </div>
 
+            <div className='w-full flex flex-col gap-6'>
+                {isLoading ? (
+                    <Loading />
+                ) : (
+                    companies.map((cmp: any, index: any) => (
+                        <Link to={`/Company-profile/${cmp.id}`} key={index}> {/* Wrap CompanyCard with Link */}
+                            <CompanyCard cmp={cmp} />
+                        </Link>
+                    ))
+                )}
+            </div>
+        </div>
     );
 };
 

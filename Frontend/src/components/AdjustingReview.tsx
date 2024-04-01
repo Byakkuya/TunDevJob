@@ -1,26 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import { Rating } from '@smastrom/react-rating';
-import Button from '@material-ui/core/Button';
+import { Button} from '@mui/material';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Typography from '@material-ui/core/Typography';
+import { TbAdjustmentsUp } from "react-icons/tb";
 
-import { IoAddOutline } from 'react-icons/io5';
 import { useNavigate, useParams } from 'react-router-dom';
 import { axiosInstance } from '../lib/axios';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAppDispatch, useAppSelector } from '../shared/store/hook';
 import { message } from 'antd';
+import Loading from './Loading';
 
-const AddingReview = () => {
+
+interface AdjustingReviewProps {
+    id: number;
+    developerName: string;
+    photo: string;
+    rating: number;
+    comment: string;
+    userId: number;
+    onCloseModal: () => void;
+}
+//@ts-ignore
+const AdjustingReview = ({id, developerName, photo, rating, comment, userId, onCloseModal}) => {
 
     const queryClient = useQueryClient();
     //@ts-ignore
     const {user} = useAppSelector((state) => state.auth.auth);
+    const USERID = (user as { id?: number })?.id;
+    const [isDataFetched, setIsDataFetched] = useState(false);
+
+    const {data : testi,isLoading} = useQuery({
+        queryKey: ["userTestimonial"],
+        queryFn: async () => {
+            const response = await axiosInstance.get(`/testimonials/${USERID}`)
+            
+            return response.data;
+        }
+    
+    })
+    
+  
 
     const initialValues = {
-        text: '',
-        rating: 0,
+        text: comment,
+        rating: rating,
     };
 
     const navigate = useNavigate();
@@ -30,23 +56,24 @@ const AddingReview = () => {
     // get the id of the company from the URL
     const params = useParams<{ id?: string }>();
     const companyId = parseInt(params.id || '0');
-    const token = localStorage.getItem('accessToken');
     
 
     const { mutate, isPending } = useMutation({
         mutationFn: async ({ data }: { data: any }) => {
-            const response = await axiosInstance.post('/testimonials', data);
+            const response = await axiosInstance.put(`/testimonials/${id}`, data);
             return response.data;
         },
         onSuccess(data, variables, context) {
             message.success({
-                content: 'Review Added Successfully',
+                content: 'your review has been adjusted successfully',
                 duration: 3,
                 style: {
                     marginTop: '10vh',
                 },
             });
-            queryClient.invalidateQueries({ queryKey: ['testimonials'] });
+            queryClient.invalidateQueries({ queryKey: ['MODtestimonial'] });
+            // refresh the page
+            window.location.reload();
         },
         onError(error, variables, context) {
             message.error({
@@ -58,16 +85,16 @@ const AddingReview = () => {
                 },
             });
         },
-    });
+    }); 
 
-    const onSubmit = async (values: any) => {
+     const onSubmit = async (values: any) => {
         const requestData = {
             companyId,
             text: values.text,
             rating: values.rating,
         };
         mutate({ data: requestData });
-    };
+    }; 
 
     const validate = (values: any) => {
         const errors: any = {};
@@ -86,18 +113,22 @@ const AddingReview = () => {
         validate, // Add validate function here
     });
 
-    const {data : any, isLoading} = useQuery({
-        queryKey: ["testimonials"],
+     const {data : modi} = useQuery({
+        queryKey: ["MODtestimonial"],
         queryFn: async () => {
             const response = await axiosInstance.post('/testimonials');
             return response.data;
         },
     
-    })
+    }) 
     return (
         <div className="max-w-md mx-auto mt-12 p-6 bg-white rounded-md shadow-md">
+            {isLoading ? (
+             <Loading />
+        ) : (
+            <>
             <Typography variant="h5" className="text-2xl font-bold mb-4">
-                Add a Review
+                Adjust Review
             </Typography>
             <form onSubmit={formik.handleSubmit} className="space-y-4">
                 <div>
@@ -114,7 +145,7 @@ const AddingReview = () => {
                         placeholder="Write your review here..."
                         className="mt-1 p-2 w-full border rounded-md"
                     />
-                    {formik.errors.text ? <div className="text-red-500">{formik.errors.text}</div> : null}
+                    {/* {formik.errors.text ? <div className="text-red-500">{formik.errors.text}</div> : null} */}
                 </div>
 
                 <div>
@@ -126,23 +157,24 @@ const AddingReview = () => {
                         onChange={(value: any) => formik.setFieldValue('rating', value)}
                         style={{ maxWidth: 100 }}
                     />
-                    {formik.errors.rating ? <div className="text-red-500">{formik.errors.rating}</div> : null}
+                   {/*  {formik.errors.rating ? <div className="text-red-500">{formik.errors.rating}</div> : null} */}
                 </div>
 
                 <div>
                     <Button
                         type="submit"
                         variant="contained"
-                        color="primary"
-                        startIcon={<IoAddOutline />}
-                        className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+                        color="success"
+                        startIcon={<TbAdjustmentsUp  />}
                     >
-                        Add Review
+                       Adjust
                     </Button>
                 </div>
             </form>
+            </>
+            )}
         </div>
     );
 };
 
-export default AddingReview;
+export default AdjustingReview;

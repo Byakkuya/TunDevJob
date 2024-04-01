@@ -18,12 +18,25 @@ export const createTestimonial = async (req: Request, res: Response) => {
     if (!developer) {
         return res.status(400).json({error: 'Developer not found'});
     }
+    // check if the developer has already provided a testimonial for the company
+    const existingTestimonial = await prismaclient.testimonial.findFirst({
+        where: {
+            developerId: developer.id,
+            companyId
+        }
+    });
+    if (existingTestimonial) {
+        return res.status(400).json({error: 'You have already provided a testimonial for this company'});
+    }
     // create the testimonial
     const testimonial = await prismaclient.testimonial.create({
         data: {
             text,
             rating,
             developerId: developer.id,
+            userId: (user as { id: number }).id,
+            developerName: developer.name,
+            developerProfilePicture: developer.profilePicture,
             companyId
         }
     });
@@ -55,21 +68,19 @@ export const getAllTestimonials = async (req: Request, res: Response) => {
     }
 }
 
-// get a testimonial by id
-export const getTestimonialById = async (req: Request, res: Response) => {
+// get a testimonial by user id
+export const getTestimonialByUserId = async (req: Request, res: Response) => {
+    //the user id in the request url
     const { id } = req.params;
     try {
-        const testimonial = await prismaclient.testimonial.findUnique({
+        const testimonial = await prismaclient.testimonial.findFirst({
             where: {
-                id: Number(id)
+                userId: Number(id)
             }
         });
-        if (!testimonial) {
-            return res.status(404).json({error: 'Testimonial not found'});
-        }
-        res.status(200).json({testimonial});
+        res.status(200).json(testimonial);
     } catch (error) {
-        console.error('Error fetching testimonial:', error);
+        console.error('Error fetching testimonials:', error);
         res.status(500).json({error: 'Internal server error'});
     
     }
