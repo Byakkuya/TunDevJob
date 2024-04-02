@@ -14,7 +14,8 @@ const FileInputField: React.FC<FileInputFieldProps> = ({ label, ...props }) => {
         helpers.setValue(files);
 
         // Additional logic or logging can be added here
-        console.log(files);
+        //@ts-ignore
+        //console.log(files[0]);
     };
 
     return (

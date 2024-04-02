@@ -22,6 +22,6 @@
   },
   "include": [
     "src"
-  ],
+, "src/lib/supabase.ts"  ],
   "types": ["node", "react", "@types/moment"]
 }

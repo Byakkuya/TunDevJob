@@ -56,7 +56,7 @@ model Company {
   zipcode      String
   fullAddress  String
   description  String
-  logo         String
+  logo         String?
   website      String?
   linkedin     String?
   createdAt    DateTime      @default(now())

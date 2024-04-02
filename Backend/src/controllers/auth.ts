@@ -73,7 +73,6 @@ export const signupCompany = async (req: Request, res: Response) => {
                 zipcode,
                 fullAddress,
                 description,
-                logo,
                 website,
                 linkedin
               }

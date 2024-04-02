@@ -21,7 +21,7 @@ const FormNavigation = (props : Props) => {
             </Button>
             )}
 
-            <Button type="submit" color="primary" variant="contained">{props.isLastStep ? 'Submit': 'Next'}</Button>
+            <Button type="submit" color="primary" variant="contained">{props.isLastStep ? 'Sign Up': 'Next'}</Button>
         </div>
     );
 };
