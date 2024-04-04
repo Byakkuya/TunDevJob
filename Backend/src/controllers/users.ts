@@ -1,3 +1,4 @@
+import { hashSync } from "bcrypt";
 import { prismaclient } from "..";
 import { Request, Response} from 'express';
 
@@ -26,8 +27,8 @@ export const getUser = async (req: Request, res: Response) => {
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
-
-        res.json(user);
+        const {email, password} = user;
+        res.json({email, password});
     } catch (error) {
         console.log('Error getting user:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -48,8 +49,8 @@ export const getCompanyByUserId = async (req: Request, res: Response) => {
             return res.status(404).json({ error: 'Company not found' });
         }
 
-        const {name,number,city, zipcode,fullAddress,description,logo,website,linkedin} = company;
-        res.json({name,number,city, zipcode,fullAddress,description,logo,website,linkedin});
+        const {id,name,number,city, zipcode,fullAddress,description,logo,website,linkedin} = company;
+        res.json({id,name,number,city, zipcode,fullAddress,description,logo,website,linkedin});
     } catch (error) {
         console.log('Error getting company:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -147,13 +148,25 @@ export const deleteDeveloper = async (req: Request, res: Response) => {
 
 //update a user by id
 export const updateUser = async (req: Request, res: Response) => {
+    const {email, password} = req.body;
+    const hashedPassword = hashSync(password, 10);
+    
     try {
         const userId = parseInt(req.params.id, 10);
+        
+
         const user = await prismaclient.user.update({
             where: {
                 id: userId,
             },
-            data: req.body,
+            
+           
+            
+            data: 
+            {
+                email,
+                password: hashedPassword,
+            },
         });
 
         res.json(user);

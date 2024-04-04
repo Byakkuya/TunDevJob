@@ -19,7 +19,7 @@ UsersRoutes.delete('/developer/:id',authenticate,restrictTo(['ADMIN', 'DEVELOPER
 
 
 UsersRoutes.get('/:id',authenticate,getUser );
-UsersRoutes.put('/:id',authenticate,restrictTo('ADMIN'),updateUser );
-UsersRoutes.delete('/:id',authenticate,restrictTo('ADMIN'), deleteUser);
+UsersRoutes.put('/:id',authenticate,updateUser );
+UsersRoutes.delete('/:id',authenticate, deleteUser);
 
 export default UsersRoutes;

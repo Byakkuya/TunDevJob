@@ -6,6 +6,7 @@ import ApplicationsRoutes from "./applications";
 import TestimonialsRoutes from "./testimonials";
 import DevelopersRoutes from "./developers";
 import ReportsRoutes from "./reports";
+import UsersRoutes from "./users";
 
 const rootRouter = Router();
 
@@ -16,6 +17,7 @@ rootRouter.use('/developers',DevelopersRoutes);
 rootRouter.use('/applications',ApplicationsRoutes);
 rootRouter.use('/testimonials',TestimonialsRoutes);
 rootRouter.use('/reports',ReportsRoutes);
+rootRouter.use('/users',UsersRoutes);
 
 
 
