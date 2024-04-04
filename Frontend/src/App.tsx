@@ -52,7 +52,7 @@ function App() {
                         
                         <Route
                             path={
-                                role === "DEVELOPER"
+                                role === "DEVELOPER" || "COMPANY"
                                     ? "/profile"
                                     : "/profile/:id"
                             }
