@@ -9,7 +9,7 @@ export const supabase = createClient(supabaseUrl, supabaseKey);
 export const uploadimageToSupabase = async (file: any,name:any) => {
         
     const fileName = String(name);
-    console.log(fileName);
+    
     const { data, error } = await supabase.storage
         .from('pic')
         // upload the file with the email as the name
@@ -64,11 +64,64 @@ export const deleteImageFromSupabase = async (name: any) => {
     const { data, error } = await supabase.storage
         .from('pic')
         .remove([name]);
-    if(data){
-        message.success('Image deleted successfully');
-    }
     if(error){
         message.error(error.message);
     }
     return
+}
+
+
+// Resume
+export const uploadResumeToSupabase = async (file: any,name:any) => {
+  const fileName = String(name);
+    
+  const { data, error } = await supabase.storage
+      .from('resume')
+      // upload the file with the email as the name
+      .upload(fileName, file, {
+          cacheControl: '60',
+          upsert: true,
+          
+      });
+  if(data){
+     // message.success('Image uploaded successfully');
+     message.success({
+      content: 'Resume uploaded successfully',
+      duration: 3, // Display duration in seconds
+      style: {
+        marginTop: '10vh', // Adjust vertical position
+      },
+    });
+    message.warning({
+      content: 'Please wait for the Resume to load completely it may take some time',
+      duration: 6, // Display duration in seconds
+      style: {
+        marginTop: '10vh', // Adjust vertical position
+      },
+    });
+
+  }
+  if(error){
+      //message.error(error.message);
+      message.error({
+          content: error.message,
+          duration: 3, // Display duration in seconds
+          style: {
+            marginTop: '10vh', // Adjust vertical position
+          },
+        });
+  }
+  return
+}
+
+export const deleteResumeFromSupabase = async (name: any) => {
+
+  const { data, error } = await supabase.storage
+  .from('resume')
+  .remove([name]);
+if(error){
+  message.error(error.message);
+}
+return
+  
 }
