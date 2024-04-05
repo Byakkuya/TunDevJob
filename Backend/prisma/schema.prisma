@@ -33,11 +33,11 @@ model Developer {
   city         String
   zipcode      String
   currentPosition String
-  profilePicture String
+  profilePicture String?
   github       String
   linkedin     String
   fullAddress  String
-  Resume       String
+  Resume       String?
   createdAt    DateTime      @default(now())
   applications Application[]
   testimonials Testimonial[]

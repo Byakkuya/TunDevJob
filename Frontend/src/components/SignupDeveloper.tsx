@@ -8,6 +8,11 @@ import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import PhoneInputField from "./PhoneInputField";
 import FileInputField from "./FileInputField";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { SignUpDev } from "../core/models/SignUp";
+import { axiosInstance } from "../lib/axios";
+import { message } from "antd";
 
 
 
@@ -34,58 +39,112 @@ const validationSchema1 = Yup.object({
 });
 
 const validationSchema2 = Yup.object({
-    phone: Yup.string().required("Phone is required"),
+    number: Yup.string().required("Phone is required"),
     city: Yup.string().required("City is required"),
     zipcode: Yup.string().required("Zipcode is required"),
     fullAddress: Yup.string().required("Address is required"),
 });
 const validationSchema3 = Yup.object({
-    profilePicture: Yup.mixed()
-        .required("Profile Picture is required")
-
-    ,
-    currentposition: Yup.string().required("Current Position is required"),
-
-
+    
+    currentPosition: Yup.string().required("Current Position is required"),
+    linkedin: Yup.string().required("Linkedin is required")
+    .matches(/^(www.linkedin.com\/)/, "Invalid linkedin link it must be like www.linkedin.com/yourprofile"),
+    github: Yup.string().required("Github is required")
+    .matches(/^(www.github.com\/)/, "Invalid github link it must be like www.github.com/yourprofile")
 });
-const validationSchema4 = Yup.object({
-    resume: Yup.mixed().required("Resume is required"),
-    linkedin: Yup.string().required("Linkedin is required"),
-    github: Yup.string().required("Github is required"),
-});
+
+
+  
+    
 
 
 
 
 const SignupDeveloper = () => {
+    const navigate = useNavigate();
+    const { mutate, isPending } = useMutation(
+        {
+          mutationFn: async ({ data }: { data: SignUpDev | any }) => {
+            const response = await axiosInstance.post('auth/singupdeveloper', data);
+            return response.data;
+          },
+          onSuccess(data, variables, context) {
+            navigate('/login');
+            
+
+
+            message.success({
+              content: 'signup Successful please login and complete your profile', 
+              duration: 6, // Display duration in seconds
+              style: {
+                marginTop: '10vh', // Adjust vertical position
+              },
+            });
+          },
+          onError(error, variables, context) {
+            //@ts-ignore
+            if (error.response && error.response.status === 401) {
+              // Handle unauthorized access error
+              message.error({
+                //@ts-ignore
+                content: `erro : ${error.response.data.error} please try again`,
+                duration: 6,
+                style: {
+                  marginTop: '10vh',
+                },
+              });
+            } else {
+              // Handle other server errors
+              message.error({
+                //@ts-ignore
+                content: error.response ? error.response.data.error : 'Something went wrong. Please try again.',
+                duration: 6,
+                style: {
+                  marginTop: '10vh',
+                },
+              });
+            }
+          },
+        }
+      );
 
     return (
         <div
             className=" text-white h-[100vh] flex justify-center items-center bg-cover bg-gradient-to-b from-indigo-400 to-[#e9f8ff]">
 
-            <div className="bg-white rounded-lg shadow p-6">
+<div className="bg-white rounded-lg shadow p-6 w-[500px] h-[450px]">
                 <MultiStepForm
                     initialValues={{
                         name: "",
                         email: "",
                         password: "",
                         confirmPassword: "",
-                        phone: "",
+                        
                         city: "",
                         zipcode: "",
                         fullAddress: "",
-                        profilePicture: null,
-                        currentposition: "",
-                        skills: "",
-                        resume: "",
+                        currentPosition: "",
                         linkedin: "",
                         github: "",
-
-
+                        number: "", 
                     }}
-                    onSubmit={(values) => {
-                        alert(JSON.stringify(values, null, 2))
+                    
+                    onSubmit={ async (values) => {
+                        console.log(values);
+                        try {
+                            mutate({data: values});
+                        }
+                        catch (error) {
+                            message.error({
+                                content: "Something went wrong please try again",
+                                duration: 3, // Display duration in seconds
+                                style: {
+                                    marginTop: '10vh', // Adjust vertical position
+                                },
+                            });
+                        
                     }}
+                    }
 
                 >
                     <FormStep
@@ -104,7 +163,7 @@ const SignupDeveloper = () => {
                         onSubmit={() => console.log("step 2 submit ")}
                         validationSchema={validationSchema2}
                     >
-                        <PhoneInputField label="Phone" name="phone" country="tn"/>
+                        <PhoneInputField label="Phone" name="number" country="tn"/>
                         <InputField label="city" name="city"/>
                         <InputField label="zipcode" name="zipcode"/>
                         <InputField label="fullAddress" name="fullAddress"/>
@@ -116,29 +175,13 @@ const SignupDeveloper = () => {
                         validationSchema={validationSchema3}
                     >
 
-                        <InputField label="Current Position" name="currentposition"/>
-                        <div className="flex my-8">
-                            <h3 className="text-black">Your Profile Picture</h3>
-                            <FileInputField label="profilePicture" name="profilePicture"/>
-                        </div>
-
-
-                    </FormStep>
-                    <FormStep
-                        stepName="socials"
-                        onSubmit={() => console.log("step 4 submit ")}
-                        validationSchema={validationSchema4}
-                    >
-
+                        <InputField label="Current Position" name="currentPosition"/>
                         <InputField label="Github Link" name="github"/>
                         <InputField label="LinkedIn Link" name="linkedin"/>
-                        <div className="flex my-8">
-                            <h3 className="text-black">Your Resume</h3>
-                            <FileInputField label="resume" name="resume"/>
-                        </div>
 
 
                     </FormStep>
+                    
 
 
 
