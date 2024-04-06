@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Company } from "../core/models/Company";
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "../lib/axios";
+import Avatar from '@material-ui/core/Avatar';
 
 interface CompanyCardProps {
     cmp: {
@@ -39,11 +40,11 @@ const CompanyCard: React.FC<CompanyCardProps> = ({ cmp }) => {
         <div className="flex items-center justify-between p-8 bg-white shadow-md rounded">
             <div className="flex items-center gap-4 w-3/4 md:w-2/4">
                 <Link to={`/company-profile/${id}`}>
-                    <img
-                        src={logo}
-                        alt={name}
-                        className="w-12 h-12 rounded"
-                    />
+                <Avatar
+  alt={name}
+  src={logo}
+  style={{ width: '100px', height: '100px' }} // Adjust the size here
+/>
                 </Link>
                 <div className="flex flex-col">
                     <Link

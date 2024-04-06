@@ -9,6 +9,7 @@ interface ReviewsListProps {
         rating: number;
         text: string;
         userId: number;
+        companyId: number;
     }[];
 }
 
@@ -23,7 +24,7 @@ const ReviewsList: React.FC<ReviewsListProps> = ({ reviews }) => {
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
 
-    const handleAddReview = (newReview: { name: string; photo: string; rating: number; comment: string, userId : number }) => {
+    const handleAddReview = (newReview: { name: string; photo: string; rating: number; comment: string, userId : number, companyId: number }) => {
         // Add the new review to the existing list
         // (You may want to use a state management library like Redux for better state management)
         reviews.push({
@@ -32,7 +33,7 @@ const ReviewsList: React.FC<ReviewsListProps> = ({ reviews }) => {
             text: '',
             developerName: newReview.name,
             developerProfilePicture: newReview.photo,
-
+            companyId: newReview.companyId // Add this line
         });
     };
 
@@ -46,7 +47,8 @@ const ReviewsList: React.FC<ReviewsListProps> = ({ reviews }) => {
                         photo={review.developerProfilePicture}
                         rating={review.rating}
                         comment={review.text}
-                        userId={review.userId} // Add this line
+                        userId={review.userId}
+                        companyId={review.companyId} // Add this line
                     />
                 </div>
             ))}

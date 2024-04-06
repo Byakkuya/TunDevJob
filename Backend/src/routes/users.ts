@@ -7,12 +7,12 @@ const UsersRoutes = Router();
 UsersRoutes.get('/',authenticate,restrictTo('ADMIN'),getUsers );
 
 
-UsersRoutes.get('/company/:id',authenticate,restrictTo(['ADMIN', 'COMPANY']),getCompanyByUserId);
+UsersRoutes.get('/company/:id',authenticate,getCompanyByUserId);
 UsersRoutes.put('/company/:id',authenticate,restrictTo(['ADMIN', 'COMPANY']),updateCompany );
 UsersRoutes.delete('/company/:id',authenticate,restrictTo(['ADMIN', 'COMPANY']),deleteCompany );
 
 
-UsersRoutes.get('/developer/:id',authenticate,restrictTo(['ADMIN', 'DEVELOPER']),getDeveloperByUserId );
+UsersRoutes.get('/developer/:id',authenticate,getDeveloperByUserId );
 UsersRoutes.put('/developer/:id',authenticate,restrictTo(['ADMIN', 'DEVELOPER']),updateDeveloper );
 UsersRoutes.delete('/developer/:id',authenticate,restrictTo(['ADMIN', 'DEVELOPER']),deleteDeveloper );
 

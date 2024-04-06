@@ -1,12 +1,11 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react'
 import { axiosInstance } from '../lib/axios';
-import { deleteImageFromSupabase, getImageFromSupabase, uploadimageToSupabase } from '../lib/supabase';
+import { deleteImageFromSupabase, uploadimageToSupabase } from '../lib/supabase';
 import { useAppDispatch, useAppSelector } from '../shared/store/hook';
 import { Typography, message } from 'antd';
-import { FaUser, FaPhone, FaMapMarkerAlt, FaFileImage, FaBuilding, FaAlignJustify, FaLinkedin, FaGlobe } from 'react-icons/fa';
+import {  FaFileImage,  } from 'react-icons/fa';
 import Avatar from '@mui/material/Avatar';
-import PhoneInput from "antd-phone-input";
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../shared/store/reducers/auth';
@@ -15,15 +14,27 @@ import { IoSaveOutline } from "react-icons/io5";
 import LoadingButton from '@mui/lab/LoadingButton';
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { styled } from '@mui/material/styles';
-import { MdDeleteOutline } from 'react-icons/md';
 import { MdWork } from "react-icons/md";
 import ReviewsList from './ReviewsList';
 import { Modal } from '@material-ui/core';
 import UploadJob from '../pages/UploadJob';
+import { Modal as antdmodal } from 'antd';
+import { Button as AntButton } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 
 
 
 function UserCompany({ userId }: { userId: string }) {
+
+  const StyledAvatar = styled(Avatar)`
+  width: 200px !important;
+  height: 200px !important;
+`;
+
+
+
+
+
     // get user informations
    const { user } = useAppSelector((state) => state.auth.auth);
    //@ts-ignore
@@ -80,14 +91,14 @@ const VisuallyHiddenInput = styled('input')({
 
    const [selectedFile, setSelectedFile] = useState<String>();
    const name = userId + '.jpg';
-   const handleFileChange = (event:any) => {
+   const handleFileChange = async (event:any) => {
     const file = event.target.files[0];
-    setSelectedFile(
-      file ? URL.createObjectURL(file) : undefined
-    );
-     
+    
     if (typeof file === 'object' && file !== null) {
-      uploadimageToSupabase(file, name);
+      await uploadimageToSupabase(file, name);
+      setSelectedFile(
+        "https://lfuugdxzrvljgtkzairs.supabase.co/storage/v1/object/public/pic/" + name
+      );
     } else {
       // Handle the case where file is not an object or is null
       message.error({
@@ -300,28 +311,38 @@ const handleSubmit2 = async (e: any) => {
   }
 
   //deleter account
-  const handleDelete = async () => {
-    try {
-      await axiosInstance.delete(`/users/${id}`);
-      dispatch(logout());
-      navigate('/login');
-      deleteImageFromSupabase(name);
-      message.success({
-        content: 'Your account has been deleted successfully',
-        duration: 6,
-        style: {
-          marginTop: '10vh',
-        },
-      });
-    } catch (error) {
-      message.error({
-        content: 'Something went wrong please try again',
-        duration: 3,
-        style: {
-          marginTop: '10vh',
-        },
-      });
-    }
+  const handleDelete = () => {
+    antdmodal.confirm({
+      title: 'Are you sure you want to delete your account?',
+      content: 'This action cannot be undone.',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk: async () => {
+        try {
+          await axiosInstance.delete(`/users/${id}`);
+          dispatch(logout());
+          navigate('/login');
+          deleteImageFromSupabase(name);
+          
+          message.success({
+            content: 'Your account has been deleted successfully',
+            duration: 6,
+            style: {
+              marginTop: '10vh',
+            },
+          });
+        } catch (error) {
+          message.error({
+            content: 'Something went wrong please try again',
+            duration: 3,
+            style: {
+              marginTop: '10vh',
+            },
+          });
+        }
+      },
+    });
   };
  return (
 
@@ -344,12 +365,11 @@ const handleSubmit2 = async (e: any) => {
     <FaFileImage className="mr-2 inline" />
     Change Logo:
   </label>
-  <Avatar
-    alt={details?.name || 'Company Logo'}
-    src={selectedFile || details?.logo}
-    sx={{ width: 200, height: 200, marginBottom: '1rem' }}
+  <StyledAvatar
+  alt={details?.name || 'Company Logo'}
+  src={selectedFile || details?.logo}
+  
   />
-
 <Button
       style={{ color: 'white', backgroundColor: '#161c24' }}
       component="label"
@@ -554,8 +574,9 @@ const handleSubmit2 = async (e: any) => {
 
       </div>
     <div className="flex justify-center items-center space-x-8">
-    <Button className="mr-2"  variant="contained" color="error" startIcon={<MdDeleteOutline />} onClick={handleDelete}>delete your Acount </Button>
-   
+    <AntButton className="mr-2" type="primary" danger icon={<DeleteOutlined />} onClick={handleDelete}>
+  Delete Your Account
+</AntButton>   
     </div>
 
 
@@ -618,5 +639,3 @@ const handleSubmit2 = async (e: any) => {
 }
 
 export default UserCompany;
-
-

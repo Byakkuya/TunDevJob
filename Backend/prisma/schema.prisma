@@ -105,16 +105,14 @@ model Application {
 model Testimonial {
   id          Int       @id @default(autoincrement())
   userId      Int       // The user who provided the testimonial
-  developer   Developer @relation(fields: [developerId], references: [id],onDelete: Cascade)
+  developer   Developer @relation(fields: [developerId], references: [id], onDelete: Cascade)
   developerId Int
-  developerName String 
-  developerProfilePicture String
-  company     Company   @relation(fields: [companyId], references: [id],onDelete: Cascade)
+  company     Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId   Int
   text        String    // The text content of the testimonial
   rating      Float     // Rating provided by the developer (optional)
   createdAt   DateTime  @default(now())
-  reports     Report[]  // Testimonial cacn be reported by companies
+  reports     Report[]  // Testimonial can be reported by companies
 }
 
 // Report model representing reports made by companies

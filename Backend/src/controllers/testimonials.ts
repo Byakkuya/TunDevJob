@@ -35,8 +35,6 @@ export const createTestimonial = async (req: Request, res: Response) => {
             rating,
             developerId: developer.id,
             userId: (user as { id: number }).id,
-            developerName: developer.name,
-            developerProfilePicture: developer.profilePicture,
             companyId
         }
     });
@@ -59,7 +57,11 @@ export const createTestimonial = async (req: Request, res: Response) => {
 // get all testimonials
 export const getAllTestimonials = async (req: Request, res: Response) => {
     try {
-        const testimonials = await prismaclient.testimonial.findMany();
+        const testimonials = await prismaclient.testimonial.findMany({
+            include: {
+                developer: true
+            }
+        });
         res.status(200).json({testimonials});
     } catch (error) {
         console.error('Error fetching testimonials:', error);
