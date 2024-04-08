@@ -148,7 +148,7 @@ export const loginUser = async (req: Request, res: Response) => {
           email: user.email,
           role: user.role
       };
-      const token = jwt.sign(payload, JWT_SECRET, {expiresIn: '1h'});
+      const token = jwt.sign(payload, JWT_SECRET, {expiresIn: '20d'});
       
       res.status(200).json({message: 'Login successful', token});
 

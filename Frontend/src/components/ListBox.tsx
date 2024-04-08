@@ -7,7 +7,7 @@ interface ListBoxProps {
     setSort: (value: string) => void;
 }
 
-const options = ["Newest", "Oldest", "A-Z", "Z-A"];
+const options = ["Newest", "Oldest"];
 
 const ListBox: FC<ListBoxProps> = ({ sort, setSort }) => {
     return (

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import {useMemo, useState} from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BiBriefcaseAlt2 } from "react-icons/bi";
@@ -8,29 +9,75 @@ import { IoNewspaperOutline } from "react-icons/io5";
 
 
 
-import {mockJobs, jobTypes, experience, jobLocations, contractTypes} from "../core/mocks/Jobs";
+
 import CustomButton from "../components/CustomButton";
 import JobCard from "../components/JobCard";
 import ListBox from "../components/ListBox";
-import {Modal} from "@material-ui/core";
-import UploadJob from "./UploadJob";
+import {Modal, CircularProgress ,Box} from "@material-ui/core";
+import UploadJob from "../components/UploadJob";
 import { useAppSelector } from "../shared/store/hook";
+import { useQuery } from "@tanstack/react-query";
+import { axiosInstance } from "../lib/axios";
+import Loading from "../components/Loading";
 interface FindJobsProps {}
 
 
 
-
-
-
-
 const FindJobs: React.FC<FindJobsProps> = () => {
+     
+     const jobTypes = ["Full-Time", "Part-Time", "Internship"];
+     const jobLocations = ["Remote", "On Site"];
+     const contractTypes = ["CDI", "CDD", "Freelance"];
 
-
-
+ /* -----------------------------------------------------------------------------------*/
     const [isJobTypesHidden, setIsJobTypesHidden] = useState(false);
     const [isExperienceHidden, setIsExperienceHidden] = useState(false);
     const [isLocationHidden, setIsLocationHidden] = useState(false);
     const [isContractTypeHidden, setIsContractTypeHidden] = useState(false);
+    const [sort, setSort] = useState<string>("Newest");
+    const [page, setPage] = useState<number>(1);
+    const itemsPerPage = 9;
+    const [filterJobTypes, setFilterJobTypes] = useState<string[]>([]);
+    const [isFetching, setIsFetching] = useState<boolean>(false);
+
+
+    const { user} = useAppSelector((state) => state.auth.auth);
+    //@ts-ignore
+    const Role = user?.role;
+    const isDeveloper = Role === 'DEVELOPER';
+    const isCompany = Role === 'COMPANY';
+    interface jobs {
+        id: number;
+        jobTitle: string;
+        jobType: string;
+        location: string;
+        experience: string;
+        contractType: string;
+        created_at: string;
+        company: {
+            name: string;
+            profileUrl: string;
+        };
+    }
+    const {data: jobs, isLoading} = useQuery({
+        queryKey: ["jobs"],
+        queryFn: async () => {
+            const response = await axiosInstance.get("/jobs");
+            return response.data as jobs[];
+            
+        },
+        
+        
+    });
+    
+    
+console.log(jobs);
+
+
+
+
+
+
 
     const toggleVisibility = (section:string) => {
         switch (section) {
@@ -52,78 +99,94 @@ const FindJobs: React.FC<FindJobsProps> = () => {
     };
 
 
+    
 
-
-
-    const [sort, setSort] = useState<string>("Newest");
-    const [page, setPage] = useState<number>(1);
-    const itemsPerPage = 9;
-
-    const [filterJobTypes, setFilterJobTypes] = useState<string[]>([]);
-    const [filterExp, setFilterExp] = useState<string[]>([]);
-
-    const [isFetching, setIsFetching] = useState<boolean>(false);
-
-    const location = useLocation();
-    const navigate = useNavigate();
+    
 
     // Function to handle sorting option change
-    const handleSortChange = (value: string) => {
+    
+
+    const handleSortChangeFromListBox = (value: string) => {
         setSort(value);
     };
 
+
     // useMemo hook to sort jobs based on the selected option
     const sortedJobs = useMemo(() => {
-        const currentDate = new Date();
-
-        return mockJobs.slice().sort((a, b) => {
-            const dateA = new Date(a.created_at).getTime();
-            const dateB = new Date(b.created_at).getTime();
-
+        if (!Array.isArray(jobs)) {
+            return [];
+        }
+    
+        return jobs?.slice().sort((a:any, b:any) => {
+            const dateA = new Date(a.createdAt).getTime();
+            const dateB = new Date(b.createdAt).getTime();
+    
             if (isNaN(dateA) || isNaN(dateB)) {
                 // Handle invalid dates (you may want to adjust this according to your needs)
                 return 0;
             }
-
+    
             if (sort === "Newest") {
-                return dateA - currentDate.getTime();
+                return dateB - dateA; // sort by descending order of dates
             } else if (sort === "Oldest") {
-                return currentDate.getTime() - dateA;
+                return dateA - dateB; // sort by ascending order of dates
             } else if (sort === "A-Z") {
-                return a.jobTitle.localeCompare(b.jobTitle);
+                return a.title.localeCompare(b.title);
             } else if (sort === "Z-A") {
-                return b.jobTitle.localeCompare(a.jobTitle);
+                return b.title.localeCompare(a.title);
             }
-
+    
             return 0;
         });
-    }, [mockJobs, sort]);
+    }, [jobs, sort]);
+     
+    const [filterLocation, setFilterLocation] = useState<string[]>([]);
+    const [filterContractType, setFilterContractType] = useState<string[]>([]);
 
-
-
-
-    const filteredJobs = useMemo(() => {
-        // Apply your filtering logic here based on filterJobTypes and filterExp
-        // This is just a placeholder, you should replace it with your actual filtering logic
-        return sortedJobs.filter((job) => {
-            // Example: Check if job type is in filterJobTypes
-            return filterJobTypes.length === 0 || filterJobTypes.includes(job.jobType);
-        });
-    }, [sortedJobs, filterJobTypes, filterExp]);
-
-    // Calculate total number of pages based on filtered jobs
-    const totalPages = Math.ceil(filteredJobs.length / itemsPerPage);
-
-    // Slice jobs based on the current page and items per page
-    const visibleJobs = filteredJobs.slice((page - 1) * itemsPerPage, page * itemsPerPage);
-
-    const filterJobs = (val: string) => {
-        if (filterJobTypes.includes(val)) {
-            setFilterJobTypes(filterJobTypes.filter((el) => el !== val));
+    const filterJobs = (val: string, filterType: string) => {
+        let currentFilters;
+        let setFilters;
+    
+        switch (filterType) {
+            case 'jobType':
+                currentFilters = filterJobTypes;
+                setFilters = setFilterJobTypes;
+                break;
+            case 'location':
+                currentFilters = filterLocation;
+                setFilters = setFilterLocation;
+                break;
+            case 'contractType':
+                currentFilters = filterContractType;
+                setFilters = setFilterContractType;
+                break;
+            default:
+                return;
+        }
+    
+        if (currentFilters.includes(val)) {
+            setFilters(currentFilters.filter((el) => el !== val));
         } else {
-            setFilterJobTypes([...filterJobTypes, val]);
+            setFilters([...currentFilters, val]);
         }
     };
+
+    const filteredJobs = useMemo(() => {
+        return sortedJobs?.filter((job:any) => {
+            const jobTypeMatch = filterJobTypes.length === 0 || filterJobTypes.includes(job.jobType);
+            const locationMatch = filterLocation.length === 0 || filterLocation.includes(job.location);
+            const contractTypeMatch = filterContractType.length === 0 || filterContractType.includes(job.contractType);
+    
+            return jobTypeMatch && locationMatch && contractTypeMatch;
+        });
+    }, [sortedJobs, filterJobTypes, filterLocation, filterContractType]);
+
+    // Calculate total number of pages based on filtered jobs
+    const totalPages = filteredJobs ? Math.ceil(filteredJobs.length / itemsPerPage) : 0;
+    // Slice jobs based on the current page and items per page
+    const visibleJobs = filteredJobs?.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+
+   
 
 
     const handleLoadMore = () => {
@@ -133,7 +196,6 @@ const FindJobs: React.FC<FindJobsProps> = () => {
             setIsFetching(false);
         }, 1000); // Simulating an asynchronous API call
     };
-
     const handlePageChange = (newPage: number) => {
         setPage(newPage);
     };
@@ -144,26 +206,24 @@ const FindJobs: React.FC<FindJobsProps> = () => {
 
     {/*upload button*/}
     const [openModal, setOpenModal] = useState(false);
-
     const handleOpenModal = () => {
         setOpenModal(true);
     };
-
     const handleCloseModal = () => {
         setOpenModal(false);
     }
+/*------------------------------------------------------------------- */
+    
 
-    const { user} = useAppSelector((state) => state.auth.auth);
-    //@ts-ignore
-    const Role = user?.role;
-    const isDeveloper = Role === 'DEVELOPER';
-    const isCompany = Role === 'COMPANY';
 
+    
 
     return (
-
-        <div className="mt-16 bg-gradient-to-t from-stone-100 via-purple-300 to-blue-200">
-
+        
+        <div className="mt-16 bg-gradient-to-br from-indigo-100 via-violet-50 to-cyan-100">
+{isLoading ? (
+            <Loading />
+        ) : (
 
             <div className='container sm:mt-2 mx-auto flex gap-6 2xl:gap-10 md:px-5 py-0 md:py-6 '>
                 <div className='hidden md:flex flex-col w-1/6 h-fit bg-white shadow-sm p-4 rounded-xl bg-slate-50'>
@@ -187,11 +247,11 @@ const FindJobs: React.FC<FindJobsProps> = () => {
                             {jobTypes.map((jtype, index) => (
                                 <div key={index} className='flex items-center gap-2 text-sm md:text-base '>
                                     <input
-                                        type='checkbox'
-                                        value={jtype}
-                                        className='w-4 h-4 text-indigo-600 focus:ring-indigo-500'
-                                        onChange={(e) => filterJobs(e.target.value)}
-                                    />
+    type='checkbox'
+    value={jtype}
+    className='w-4 h-4 text-indigo-600 focus:ring-indigo-500'
+    onChange={(e) => filterJobs(e.target.value, 'jobType')}
+/>
                                     <span>{jtype}</span>
                                 </div>
                             ))}
@@ -217,12 +277,12 @@ const FindJobs: React.FC<FindJobsProps> = () => {
                         <div className={`flex flex-col gap-2 ${isLocationHidden ? 'hidden' : ''}`}>
                             {jobLocations.map((jtype, index) => (
                                 <div key={index} className='flex items-center gap-2 text-sm md:text-base '>
-                                    <input
-                                        type='checkbox'
-                                        value={jtype}
-                                        className='w-4 h-4 text-indigo-600 focus:ring-indigo-500'
-                                        onChange={(e) => filterJobs(e.target.value)}
-                                    />
+<input
+    type='checkbox'
+    value={jtype}
+    className='w-4 h-4 text-indigo-600 focus:ring-indigo-500'
+    onChange={(e) => filterJobs(e.target.value, 'location')} // changed 'jobType' to 'location'
+/>
                                     <span>{jtype}</span>
                                 </div>
                             ))}
@@ -246,11 +306,11 @@ const FindJobs: React.FC<FindJobsProps> = () => {
                             {contractTypes.map((jtype, index) => (
                                 <div key={index} className='flex items-center gap-2 text-sm md:text-base '>
                                     <input
-                                        type='checkbox'
-                                        value={jtype}
-                                        className='w-4 h-4 text-indigo-600 focus:ring-indigo-500'
-                                        onChange={(e) => filterJobs(e.target.value)}
-                                    />
+    type='checkbox'
+    value={jtype}
+    className='w-4 h-4 text-indigo-600 focus:ring-indigo-500'
+    onChange={(e) => filterJobs(e.target.value, 'contractType')}
+/>
                                     <span>{jtype}</span>
                                 </div>
                             ))}
@@ -261,15 +321,14 @@ const FindJobs: React.FC<FindJobsProps> = () => {
                 <div className='w-full md:w-5/6 px-5 md:px-0'>
                     <div className='flex items-center justify-between mb-4'>
                         <p className='text-sm md:text-base'>
-                            Showing: <span className='font-semibold'>{sortedJobs.length}</span> Jobs
+                            Showing: <span className='font-semibold'>{jobs?.length}</span> Jobs
                             Available
                         </p>
 
                         <div className='flex flex-col md:flex-row gap-0 md:gap-2 md:items-center'>
                             <p className='text-sm md:text-base'>Sort By:</p>
 
-                            <ListBox sort={sort} setSort={handleSortChange}/>
-
+                            <ListBox sort={sort} setSort={handleSortChangeFromListBox}/>
                         </div>
 
                     </div>
@@ -295,9 +354,14 @@ const FindJobs: React.FC<FindJobsProps> = () => {
                         </div>
                         </>
                         ) : null}
+
+
                         <div className="w-full flex flex-wrap gap-4">
-                            {visibleJobs.map((job, index) => (
-                                <JobCard job={job} key={index}/>
+                            
+                        {
+                            // @ts-ignore
+                            visibleJobs.map((job:any, index:any) => (
+                                 <JobCard job={job} company={job.companyId} key={index}/>
                             ))}
                         </div>
                    
@@ -337,7 +401,10 @@ const FindJobs: React.FC<FindJobsProps> = () => {
                     )}
                 </div>
             </div>
+            )}
         </div>
+   
+        
     );
 };
 

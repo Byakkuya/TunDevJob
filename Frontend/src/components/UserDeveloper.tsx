@@ -21,6 +21,8 @@ import { Modal } from 'antd';
 import { Button as AntButton } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { DownloadOutlined } from '@ant-design/icons';
+import { hashSync } from 'bcrypt-ts';
+
 
 
 
@@ -56,7 +58,7 @@ function UserDeveloper({ userId }: { userId: string }) {
     },
     
 });
-console.log(details)
+
 
 
 const VisuallyHiddenInput = styled('input')({
@@ -70,7 +72,6 @@ const VisuallyHiddenInput = styled('input')({
   whiteSpace: 'nowrap',
   width: 1,
 });
-
 
 
 const namePDF = userId + '.pdf';

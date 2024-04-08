@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 
 import { useParams } from "react-router-dom";
+import { FaPhoneAlt } from "react-icons/fa";
 
 import CustomButton from "../components/CustomButton";
-
+import { CiGlobe } from "react-icons/ci";
+import { FaLinkedin } from "react-icons/fa";
 import '@smastrom/react-rating/style.css'
 import ReviewsList from "../components/ReviewsList";
 import {Box, Modal} from "@material-ui/core";
@@ -106,7 +108,7 @@ const CompanyProfile: React.FC<CompanyProfileProps> = () => {
     return (
         
         <div className='container mx-auto p-5 mt-16'>
-            <div className='bg-blue-100 via-opacity-30 rounded-xl p-6 md:p-8'>
+            <div className='bg-gradient-to-br from-indigo-100 via-violet-50 to-cyan-100 via-opacity-30 rounded-xl p-6 md:p-8'>
                 <div className='w-full flex flex-col md:flex-row gap-3 justify-between items-center'>
                     <h2 className='text-gray-600 text-2xl md:text-3xl font-semibold'>
                         {info?.name}
@@ -125,10 +127,22 @@ const CompanyProfile: React.FC<CompanyProfileProps> = () => {
                     <div className='flex flex-col'>
                         <p className='text-xl font-semibold mb-2'>Company Information</p>
                         <p className='text-xl text-blue-600 font-semibold mb-2'>{info?.name}</p>
-                        <span className='text-base mb-1'>{info?.fullAddress}</span>
-                        <span className='text-sm mb-1'>{info?.website}</span>
-                        <span className='text-sm'>{info?.number}</span>
-                    </div>
+                        <span className='text-base mb-1'>{info?.city}</span>
+                        <div className="flex flex-row items-center gap-1">
+            <CiGlobe />
+            <span className='text-sm'>{info?.website}</span>
+            </div>
+
+            <div className="flex flex-row items-center gap-1">
+            <FaLinkedin />
+            <span className='text-sm'>{info?.linkedin}</span>
+            </div>
+            <div className="flex flex-row items-center gap-1">
+            <FaPhoneAlt />
+
+                        <span className='text-sm'>{info?.number.slice(3)}</span>
+                        </div>
+                       </div>
                 </div>
 
                 <div className='mt-6'>

@@ -83,8 +83,11 @@ model Job {
   company      Company       @relation(fields: [companyId], references: [id],onDelete: Cascade)
   companyId    Int
   location     String
-  requirements String[]
-  salary       Float
+  requirements String
+  city         String
+  jobType      String
+  contractType String
+  salary       Int
   createdAt    DateTime      @default(now())
   applications Application[]
 }
@@ -95,9 +98,15 @@ model Application {
   job         Job       @relation(fields: [jobId], references: [id],onDelete: Cascade)
   jobId       Int
   developer   Developer @relation(fields: [developerId], references: [id],onDelete: Cascade)
+  Name        String
+  currentPostition String
+  email       String
+  github      String
+  linkedin    String
+  profile     String
+  resume      String
   developerId Int
-  status      String // This can be 'applied', 'rejected', 'accepted', etc.
-  coverLetter String? // Optional cover letter for the application
+  coverLetter String
   appliedAt   DateTime  @default(now())
 }
 

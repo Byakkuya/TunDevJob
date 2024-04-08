@@ -1,43 +1,147 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { RiSendPlaneFill } from "react-icons/ri";
+import { useAppSelector } from '../shared/store/hook';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { axiosInstance } from '../lib/axios';
+import { message } from 'antd';
+import { Button } from 'antd';
+import { FiSave } from "react-icons/fi";
+import Loading from './Loading';
 
 
-const UploadJob = () => {
+const EditJob = (jobId: any) => {
+
+    const IdOfjOb = jobId.jobId
+    
+   
+    const { user } = useAppSelector((state) => state.auth.auth);
+    //@ts-ignore
+    const id = user.id;
+    const {data : details } = useQuery({
+        queryKey: ["UserCompany",id],
+        queryFn: async () => {
+            const response = await axiosInstance.get(`/users/company/${id}`)
+            
+            return response.data;
+        },
+    });
+
+    const {data : job  ,isLoading} = useQuery<any>({
+        queryKey: ["job",IdOfjOb],
+        queryFn: async () => {
+            const response = await axiosInstance.get(`/jobs/${IdOfjOb}`)
+            
+            return response.data;
+        },
+    })
+    
+
+
+
+
     const validationSchema = Yup.object({
         title: Yup.string().required('Job Title is required'),
         location: Yup.string().required('Location is required'),
+        city: Yup.string().required('City is required'),
         jobType: Yup.string().required('Job Type is required'),
         contractType: Yup.string().required('Contract Type is required'),
-        jobDescription: Yup.string().required('Job Description is required'),
-        jobRequirement: Yup.string().required('Job Requirement is required'),
+        description: Yup.string().required('Job Description is required'),
+        requirements: Yup.string().required('Job Requirement is required'),
         salary: Yup.number().typeError('Salary must be a number')
     });
 
     const initialValues = {
-        title: '',
-        location: '',
-        jobType: '',
-        contractType: '',
-        jobDescription: '',
-        jobRequirement: '',
-        salary: '',
+        title: job?.title || '',
+        location: job?.location ||'',
+        city: job?.city ||'',
+        jobType: job?.jobType ||'',
+        contractType: job?.contractType ||'',
+        description: job?.description ||'',
+        requirements: job?.requirements ||'',
+        salary: job?.salary ||0,
     };
+ /*    useEffect(() => {
+        if (!isLoading && job) {
+            initialValues.title = job.title;
+            initialValues.location = job.location;
+            initialValues.city = job.city;
+            initialValues.jobType = job.jobType;
+            initialValues.contractType = job.contractType;
+            initialValues.description = job.description;
+            initialValues.requirements = job.requirements;
+            initialValues.salary = job.salary;
+            
+        }
+    }, [isLoading, job]); */
 
     const locations = ['On Site','Remote']; // Replace with your actual locations
     const jobTypes = ['Full-Time', 'Part-Time', 'Internship']; // Replace with your actual job types
     const contractTypes = ['CDI', 'CDD', 'Freelance']; // Replace with your actual contract types
 
+    const {mutate, isPending  } = useMutation({
+        mutationFn: async (data: any) => {
+            const response = await axiosInstance.put(`/jobs/${IdOfjOb}`, data);
+            return response.data;
+        },
+        onSuccess(data, variables, context) {
+            message.success({
+                content: 'Job Updated successfully',
+                duration: 6, // Display duration in seconds
+                style: {
+                  marginTop: '10vh', // Adjust vertical position
+                },
+              });
+              //relaod the page
+                setTimeout(() => {
+                    window.location.reload();
+                }, 3000);
+        },
+        onError(error, variables, context) {
+            message.error({
+                //@ts-ignore
+                content: error.response.data.error,
+                duration: 3, // Display duration in seconds
+                style: {
+                  marginTop: '10vh', // Adjust vertical position
+                },
+              });
+              
+        },
+    });
 
-    const onSubmit = (values:any ) => {
-        console.log(values);
-        // Add your form submission logic here
+    const onSubmit = async (values:any ) => {
+        values.salary = parseInt(values.salary);
+        
+         const data = {
+            ...values,
+            companyId: details?.id,
+        }
+        
+        
+        try {
+            mutate(data);
+        }
+        catch (error) {
+            message.error({
+                content: 'Error posting job',
+                duration: 3, // Display duration in seconds
+                style: {
+                  marginTop: '10vh', // Adjust vertical position
+                },
+              });
+        } 
     };
 
     return (
+        
+         
         <div className=" mt-12 p-6  mx-28 bg-white rounded-md shadow-md ">
-            <h1 className="text-2xl font-bold mb-4 ">Upload Job</h1>
+            <h1 className="text-2xl font-bold mb-4 ">Edit Job</h1>
+            {isLoading ? 
+            (<Loading />)
+            : (
             <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
@@ -56,24 +160,38 @@ const UploadJob = () => {
                         />
                         <ErrorMessage name="title" component="div" className="text-red-500 text-sm"/>
                     </div>
+                    <div>
+                        <label htmlFor="location" className="block text-sm font-medium text-gray-600">
+                            city
+                        </label>
+                        <Field
+                            type="text"
+                            id="city"
+                            name="city"
+                            className="mt-1 p-2 w-full border rounded-md"
+                        />
+                        <ErrorMessage name="city" component="div" className="text-red-500 text-sm"/>
+                        
+                    </div>
+
 
                     <div>
                         <label htmlFor="location" className="block text-sm font-medium text-gray-600">
                             Location
                         </label>
                         <Field
-                            as="select"
-                            id="location"
-                            name="location"
-                            className="mt-1 p-2 w-full border rounded-md"
-                        >
-                            <option value="" disabled>Select Location</option>
-                            {locations.map((location) => (
-                                <option key={location} value={location}>
-                                    {location}
-                                </option>
-                            ))}
-                        </Field>
+    as="select"
+    id="location"
+    name="location" // This should match the key in the values object that you're trying to update
+    className="mt-1 p-2 w-full border rounded-md"
+>
+    <option value="" disabled>Select Location</option>
+    {locations.map((location) => (
+        <option key={location} value={location}>
+            {location}
+        </option>
+    ))}
+</Field>
                         <ErrorMessage name="location" component="div" className="text-red-500 text-sm"/>
                     </div>
 
@@ -123,11 +241,11 @@ const UploadJob = () => {
                         </label>
                         <Field
                             as="textarea"
-                            id="jobDescription"
-                            name="jobDescription"
+                            id="description"
+                            name="description"
                             className="mt-1 p-2 w-full border rounded-md"
                         />
-                        <ErrorMessage name="jobDescription" component="div" className="text-red-500 text-sm"/>
+                        <ErrorMessage name="description" component="div" className="text-red-500 text-sm"/>
                     </div>
 
                     <div>
@@ -136,11 +254,11 @@ const UploadJob = () => {
                         </label>
                         <Field
                             as="textarea"
-                            id="jobRequirement"
-                            name="jobRequirement"
+                            id="requirements"
+                            name="requirements"
                             className="mt-1 p-2 w-full border rounded-md"
                         />
-                        <ErrorMessage name="jobRequirement" component="div" className="text-red-500 text-sm"/>
+                        <ErrorMessage name="requirements" component="div" className="text-red-500 text-sm"/>
                     </div>
 
                     <div>
@@ -157,18 +275,21 @@ const UploadJob = () => {
                     </div>
 
                     <div>
-                        <button
-                            type="submit"
-                            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
-                        >
-                            <RiSendPlaneFill className="inline-block mr-2" />
-                            Upload Job
-                        </button>
+                    <Button 
+    
+    htmlType="submit" 
+    className="inline-flex items-center"
+    loading={isPending}
+    icon={<FiSave   />}
+>
+    Save
+</Button>
                     </div>
                 </Form>
             </Formik>
+            )}
         </div>
     );
 };
 
-export default UploadJob;
+export default EditJob;

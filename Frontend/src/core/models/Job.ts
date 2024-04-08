@@ -1,16 +1,15 @@
 import {Company} from "./Company";
 export type Job = {
     id:number | string ;
-    company: Company;
+    companyId: number;
     jobTitle: string;
+    city: string;
     location: string;
     jobType: string;
+    contractType: string;
     salary: string;
-    detail: {
-        description: string;
-        requirement?: string; 
-    }[];
-    applicants:number;
+    description: string;
+    requirement: string; 
     created_at:Date;
 };
 

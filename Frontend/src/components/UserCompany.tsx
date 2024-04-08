@@ -17,10 +17,11 @@ import { styled } from '@mui/material/styles';
 import { MdWork } from "react-icons/md";
 import ReviewsList from './ReviewsList';
 import { Modal } from '@material-ui/core';
-import UploadJob from '../pages/UploadJob';
+import UploadJob from './UploadJob';
 import { Modal as antdmodal } from 'antd';
 import { Button as AntButton } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
+import JobCard from './JobCard';
 
 
 
@@ -52,14 +53,16 @@ function UserCompany({ userId }: { userId: string }) {
            return response.data;
        },
    });
+
    const { data: companyData, } = useQuery({
     queryKey: ["company", details?.id],
     queryFn: async () => {
         const response = await axiosInstance.get(`/companies/${details?.id}`);
         return response.data;
     },
-});
 
+});
+console.log(companyData);
 const reviewsData = companyData?.testimonials ?? [];
 const jobs = companyData?.jobs ?? [];
   
@@ -618,13 +621,19 @@ const handleSubmit2 = async (e: any) => {
 </p>
 <div >
   <div>
-{/*   {
+{
   jobs && jobs.length > 0 ? (
-    // lis of jobs
+<div className='flex flex-wrap gap-8 mx-auto items-center justify-center'>
+        {[
+                            // @ts-ignore
+                            ...jobs]?.reverse().map((job:any, index:any) => (
+                                 <JobCard job={job} company={job.companyId} key={index}/>
+                            ))}
+    </div>
     ) : (
       <Typography.Title style={{ textAlign: 'center', marginTop: '10vh' }}>There is no Jobs yet</Typography.Title>
       )
-} */}
+}
   </div>
 </div>
 

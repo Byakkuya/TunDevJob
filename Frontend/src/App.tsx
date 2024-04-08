@@ -11,7 +11,7 @@ import FindJobs from "./pages/FindJobs";
 import Companies from "./pages/Companies";
 import Profile from "./pages/Profile";
 import CompanyProfile from "./pages/CompanyProfile";
-import UploadJob from "./pages/UploadJob";
+import UploadJob from "./components/UploadJob";
 import JobDetail from "./pages/JobDetail";
 import Footer from "./components/Footer";
 import Login from "./pages/Login";

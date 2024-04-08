@@ -4,16 +4,19 @@ import { prismaclient } from '..';
 export const uploadJob = async (req: Request, res: Response, next: NextFunction) => {
     try {
         // Extract data from the request body
-        const { title, description, companyId, location, requirements, salary } = req.body;
+        const { title, description, companyId, location, requirements, salary,city,jobType,contractType } = req.body;
 
         // Create a new job in the database
         const newJob = await prismaclient.job.create({
             data: {
                 title,
+                city,
+                jobType,
+                contractType, 
                 description,
-                companyId, // Assuming companyId is provided in the request body
+                companyId, 
                 location,
-                requirements: { set: requirements }, // Assuming requirements is an array of strings
+                requirements, 
                 salary,
             },
         });
@@ -69,8 +72,15 @@ export const updateJob = async (req: Request, res: Response) => {
     //update a job by id
     try {
         const jobId = parseInt(req.params.jobId, 10);
-        const { title, description, location, requirements, salary } = req.body;
+        const { title, description, location, requirements, salary, city, jobType, contractType, companyId } = req.body;
 
+        // check if the job exists
+        const job = await prismaclient.job.findUnique({ where: { id: jobId } });
+        if (!job) {
+            // Return an error message to the client
+            res.status(404).json({ error: 'Job not found' });
+            return;
+          }
         const updatedJob = await prismaclient.job.update({
             where: {
                 id: jobId,
@@ -79,8 +89,12 @@ export const updateJob = async (req: Request, res: Response) => {
                 title,
                 description,
                 location,
-                requirements: { set: requirements },
+                requirements,
                 salary,
+                city,
+                jobType,
+                contractType,
+                companyId,
             },
         });
 
@@ -109,56 +123,3 @@ export const deleteJob = async (req: Request, res: Response) => {
       
     }
 }
-export const applyJob = async (req: Request, res: Response) => {
-    try {
-        // Extract data from the request body
-        const { jobId, developerId, coverLetter } = req.body;
-
-        // Check if the job exists
-        const job = await prismaclient.job.findUnique({
-            where: {
-                id: jobId
-            }
-        });
-
-        if (!job) {
-            return res.status(404).json({ error: 'Job not found' });
-        }
-        
-        // Check if the user is developer
-        const developer = await prismaclient.developer.findUnique({
-            where: {
-                id: developerId
-            }
-        });
-
-        if (!developer) {
-            return res.status(404).json({ error: 'Developer not found' });
-        }
-        //check if the developer has already applied for the job
-        const applicationExists = await prismaclient.application.findFirst({
-            where: {
-                jobId,
-                developerId
-            }
-        });
-        if (applicationExists) {
-            return res.status(400).json({ error: 'You have already applied for this job' });
-        }
-
-        // Create an application for the job
-        const application = await prismaclient.application.create({
-            data: {
-                jobId,
-                developerId,
-                coverLetter,
-                status: 'applied' // Assuming initial status is 'applied'
-            }
-        });
-
-        res.status(201).json({ message: 'Application submitted successfully', application });
-    } catch (error) {
-        console.error('Error applying to job:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-};
