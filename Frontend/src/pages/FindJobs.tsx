@@ -1,24 +1,22 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import {useMemo, useState} from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import { BiBriefcaseAlt2 } from "react-icons/bi";
-import { BsStars } from "react-icons/bs";
 import {MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowUp, MdOutlineNotListedLocation} from "react-icons/md";
-import { GrUserExpert } from "react-icons/gr";
 import { IoNewspaperOutline } from "react-icons/io5";
-
-
-
-
 import CustomButton from "../components/CustomButton";
 import JobCard from "../components/JobCard";
 import ListBox from "../components/ListBox";
-import {Modal, CircularProgress ,Box} from "@material-ui/core";
+import {Modal} from "@material-ui/core";
 import UploadJob from "../components/UploadJob";
 import { useAppSelector } from "../shared/store/hook";
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "../lib/axios";
 import Loading from "../components/Loading";
+import { FiSearch } from 'react-icons/fi'; 
+import { Input, Pagination } from 'antd'; 
+
+
+
 interface FindJobsProps {}
 
 
@@ -38,6 +36,7 @@ const FindJobs: React.FC<FindJobsProps> = () => {
     const [page, setPage] = useState<number>(1);
     const itemsPerPage = 9;
     const [filterJobTypes, setFilterJobTypes] = useState<string[]>([]);
+    const [searchTerm, setSearchTerm] = useState('');
     const [isFetching, setIsFetching] = useState<boolean>(false);
 
 
@@ -176,10 +175,11 @@ console.log(jobs);
             const jobTypeMatch = filterJobTypes.length === 0 || filterJobTypes.includes(job.jobType);
             const locationMatch = filterLocation.length === 0 || filterLocation.includes(job.location);
             const contractTypeMatch = filterContractType.length === 0 || filterContractType.includes(job.contractType);
+            const searchTermMatch = job.title.toLowerCase().includes(searchTerm.toLowerCase());
     
-            return jobTypeMatch && locationMatch && contractTypeMatch;
+            return jobTypeMatch && locationMatch && contractTypeMatch && searchTermMatch;
         });
-    }, [sortedJobs, filterJobTypes, filterLocation, filterContractType]);
+    }, [sortedJobs, filterJobTypes, filterLocation, filterContractType, searchTerm]);
 
     // Calculate total number of pages based on filtered jobs
     const totalPages = filteredJobs ? Math.ceil(filteredJobs.length / itemsPerPage) : 0;
@@ -228,6 +228,14 @@ console.log(jobs);
             <div className='container sm:mt-2 mx-auto flex gap-6 2xl:gap-10 md:px-5 py-0 md:py-6 '>
                 <div className='hidden md:flex flex-col w-1/6 h-fit bg-white shadow-sm p-4 rounded-xl bg-slate-50'>
                     <p className='text-lg font-semibold text-slate-600 mb-4'>Filter Search</p>
+                    
+                    <Input
+                        className="rounded-md border-2 border-gray-300  "
+                        prefix={<FiSearch />}
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+
 
                     {/* Job Type Filter */}
                     <div className='py-2'>
@@ -321,7 +329,7 @@ console.log(jobs);
                 <div className='w-full md:w-5/6 px-5 md:px-0'>
                     <div className='flex items-center justify-between mb-4'>
                         <p className='text-sm md:text-base'>
-                            Showing: <span className='font-semibold'>{jobs?.length}</span> Jobs
+                            Showing: <span className='font-semibold'>{filteredJobs?.length}</span> Jobs
                             Available
                         </p>
 

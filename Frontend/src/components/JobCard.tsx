@@ -62,16 +62,21 @@ const handleDelete = () => {
         try {
           await axiosInstance.delete(`/jobs/${job?.id}`);
           
-          navigate('/Find-jobs');
+          
         
           
           message.success({
             content: 'Your Job has been deleted successfully',
-            duration: 6,
+            duration: 3,
             style: {
               marginTop: '10vh',
             },
+            
           });
+          
+setTimeout(() => {
+  window.location.reload();
+}, 2000);
         } catch (error) {
           message.error({
             content: 'Something went wrong please try again',
@@ -86,26 +91,26 @@ const handleDelete = () => {
     });
   };
     return (
-        <Link to={`/job-detail/${job?.id}`}>
+        
 <div className='w-full md:w-[20rem] 2xl:w-[24rem] h-[20rem] md:h-[22rem] bg-slate-100 flex flex-col justify-between shadow-lg rounded-md px-3 py-5 transition duration-300 transform hover:scale-105 '>
     <div className='flex gap-3'>
         <img
-            //@ts-ignore
+            
             src={companyDetails?.logo|| 'default-image-url'}
             alt={`Job title: ${
-                //@ts-ignore
+                
                 job?.title || 'No job title available'}`}
             className='w-20 h-20 object-cover rounded-full'
         />
 
         <div className='flex flex-col'>
-            <p className='text-xl font-semibold truncate' title={
-                 //@ts-ignore
-                job?.title || 'No job title available'}>
+        <Link to={`/job-detail/${job?.id}`}>
+            <p className='text-xl font-semibold truncate hover:text-blue-500'>
                 {
-                 //@ts-ignore
+                 
                 job?.title || 'No job title available'}
             </p>
+            </Link>
             <div className='flex gap-2 items-center text-gray-500'>
                 <GoLocation className='text-slate-900 text-sm' />
                 {job?.location || 'No location available'}
@@ -140,7 +145,7 @@ const handleDelete = () => {
         </span>
     </div>
 </div>
-        </Link>
+      
     );
 };
 

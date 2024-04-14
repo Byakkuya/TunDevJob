@@ -122,6 +122,16 @@ const Login = () => {
                         <label htmlFor="" className="absolute text-sm text-white duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-indigo-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:translate-y-0">Password</label>
                         <AiOutlineUnlock className="absolute top-4 right-4"/>
                     </div>
+                    <style>{`
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus, 
+    input:-webkit-autofill:active  {
+        transition: background-color 5000s ease-in-out 0s;
+        -webkit-text-fill-color: #fff !important;
+        border-radius: 0.25rem !important;
+    }
+`}</style>
                     <Button
   className="w-full mb-4 mt-6 text-white bg-indigo-400 hover:bg-indigo-500"
   type="primary"

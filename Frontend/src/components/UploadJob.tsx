@@ -71,7 +71,7 @@ const UploadJob = () => {
               //relaod the page
                 setTimeout(() => {
                     window.location.reload();
-                }, 3000);
+                }, 2000);
         },
         onError(error, variables, context) {
             message.error({
@@ -245,7 +245,7 @@ const UploadJob = () => {
                     <Button 
     
     htmlType="submit" 
-    className="inline-flex items-center"
+    className="inline-flex items-center  text-lg p-4"
     loading={isPending}
     icon={<RiSendPlaneFill  />}
 >

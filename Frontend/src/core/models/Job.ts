@@ -2,7 +2,7 @@ import {Company} from "./Company";
 export type Job = {
     id:number | string ;
     companyId: number;
-    jobTitle: string;
+    title: string;
     city: string;
     location: string;
     jobType: string;
