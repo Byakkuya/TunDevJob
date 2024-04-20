@@ -13,7 +13,8 @@ import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "../lib/axios";
 import Loading from "../components/Loading";
 import { FiSearch } from 'react-icons/fi'; 
-import { Input, Pagination } from 'antd'; 
+import { Input,} from 'antd'; 
+import { CircularProgress } from "@material-ui/core";
 
 
 
@@ -37,7 +38,6 @@ const FindJobs: React.FC<FindJobsProps> = () => {
     const itemsPerPage = 9;
     const [filterJobTypes, setFilterJobTypes] = useState<string[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const [isFetching, setIsFetching] = useState<boolean>(false);
 
 
     const { user} = useAppSelector((state) => state.auth.auth);
@@ -189,13 +189,7 @@ console.log(jobs);
    
 
 
-    const handleLoadMore = () => {
-        setIsFetching(true);
-        setTimeout(() => {
-            setPage(page + 1);
-            setIsFetching(false);
-        }, 1000); // Simulating an asynchronous API call
-    };
+   
     const handlePageChange = (newPage: number) => {
         setPage(newPage);
     };
@@ -222,7 +216,9 @@ console.log(jobs);
         
         <div className="mt-16 bg-gradient-to-br from-indigo-100 via-violet-50 to-cyan-100">
 {isLoading ? (
-            <Loading />
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+            <CircularProgress />
+        </div>
         ) : (
 
             <div className='container sm:mt-2 mx-auto flex gap-6 2xl:gap-10 md:px-5 py-0 md:py-6 '>
@@ -333,11 +329,10 @@ console.log(jobs);
                             Available
                         </p>
 
-                        <div className='flex flex-col md:flex-row gap-0 md:gap-2 md:items-center'>
-                            <p className='text-sm md:text-base'>Sort By:</p>
-
-                            <ListBox sort={sort} setSort={handleSortChangeFromListBox}/>
-                        </div>
+                        <div className='flex flex-col md:flex-row gap-0 md:gap-2 md:items-center' style={{zIndex: 1}}>
+    <p className='text-sm md:text-base'>Sort By:</p>
+    <ListBox sort={sort} setSort={handleSortChangeFromListBox}/>
+</div>
 
                     </div>
                     {isCompany? (
@@ -346,7 +341,7 @@ console.log(jobs);
                             <CustomButton
                                 onClick={handleOpenModal}
                                 title='Upload Job'
-                                containerStyles={` flex items-center justify-center text-white bg-black py-3 px-5 outline-none rounded-full text-base`}
+                                containerStyles={` flex items-center justify-center text-black bg-white  py-3 px-5 outline-none rounded-full text-base hover:bg-blue-100`}
                             /> 
                             
 
@@ -369,7 +364,8 @@ console.log(jobs);
                         {
                             // @ts-ignore
                             visibleJobs.map((job:any, index:any) => (
-                                 <JobCard job={job} company={job.companyId} key={index}/>
+                                // @ts-ignore
+                                 <JobCard job={job} company={job.companyId} userID={user?.id} key={index}/>
                             ))}
                         </div>
                    

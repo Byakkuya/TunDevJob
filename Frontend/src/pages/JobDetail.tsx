@@ -8,7 +8,7 @@ import { Typography } from 'antd';
 import moment from "moment";
 import { useParams, Link } from "react-router-dom";
 
-
+import { CircularProgress } from "@material-ui/core";
 import CustomButton from "../components/CustomButton";
 import {RiVerifiedBadgeFill} from "react-icons/ri";
 import {Modal} from "@material-ui/core";
@@ -69,7 +69,7 @@ const JobDetail: React.FC = ( ) => {
     const applieable = user?.role === 'DEVELOPER'
     
     
-    const {data : details } = useQuery({
+    const {data : details ,  isLoading: load1 } = useQuery({
         queryKey: ["UserCompany"],
         queryFn: async () => {
             const response = await axiosInstance.get(`/users/company/${
@@ -106,7 +106,8 @@ const JobDetail: React.FC = ( ) => {
             return null;
         },
     });
-    const {data : applications } = useQuery({
+
+    const {data : applications, isLoading: load2 } = useQuery({
         queryKey: ["applications",id],
         queryFn: async () => {
             const response = await axiosInstance.get(`/applications/${id}`)
@@ -122,7 +123,9 @@ const JobDetail: React.FC = ( ) => {
         console.error(error); // Log any errors that occur when fetching the data
     }
     if (isLoading) {
-        return <Loading/>
+        return  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+        <CircularProgress />
+    </div>
     }
     
     const job = jobdetails;
@@ -140,7 +143,9 @@ const JobDetail: React.FC = ( ) => {
     return (
        <div>
         {isLoading ? (
-            <Loading />
+               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+             <CircularProgress />
+         </div>
         ) : (
             <div className='w-full md:w-full px-5 py-10 md:px-10 shadow-xl bg-white rounded-xl'>
 

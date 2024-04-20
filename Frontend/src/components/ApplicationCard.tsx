@@ -64,11 +64,10 @@ const handleCancel = () => {
         </div>
         <div className="mt-2 text-gray-500 flex items-center">
           <AiOutlineGithub className="h-5 w-5 text-gray-500 mr-2" />
-          <a href={application.github} target="_blank" rel="noopener noreferrer">{application.github}</a>        </div>
+          <a href={application.github.startsWith('http://') || application.github.startsWith('https://') ? application.github : `https://${application.github}`} target="_blank" rel="noopener noreferrer">{application.github}</a>               </div>
         <div className="mt-2 text-gray-500 flex items-center">
           <AiOutlineLinkedin className="h-5 w-5 text-gray-500 mr-2" />
-          <a href={application.linkedin} target="_blank" rel="noopener noreferrer">{application.linkedin}</a>
-        </div>
+          <a href={application.linkedin.startsWith('http://') || application.linkedin.startsWith('https://') ? application.linkedin : `https://${application.linkedin}`} target="_blank" rel="noopener noreferrer">{application.linkedin}</a>        </div>
         <div className="mt-2 text-gray-500 flex items-center">
           <AiOutlineFilePdf className="h-5 w-5 text-gray-500 mr-2" />
           <a href={application.resume} target="_blank" rel="noopener noreferrer">View Resume</a>

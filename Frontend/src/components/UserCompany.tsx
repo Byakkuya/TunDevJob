@@ -62,7 +62,7 @@ function UserCompany({ userId }: { userId: string }) {
     },
 
 });
-console.log(companyData);
+
 const reviewsData = companyData?.testimonials ?? [];
 const jobs = companyData?.jobs ?? [];
   
@@ -201,7 +201,7 @@ const {mutate: mutate2, isPending: isPending2  } = useMutation({
     },
     onSuccess(data, variables, context) {
       dispatch(logout());
-        navigate('/login');
+        
         message.success({
             content: 'User updated successfully please login again',
             duration: 6, // Display duration in seconds
@@ -209,6 +209,8 @@ const {mutate: mutate2, isPending: isPending2  } = useMutation({
               marginTop: '10vh', // Adjust vertical position
             },
           });
+
+          navigate('/login');
           
     },
     onError(error, variables, context) {
@@ -499,7 +501,7 @@ const handleSubmit2 = async (e: any) => {
     </form>
   </div>
   {/* General*/}
- <div className="bg-white py-8 px-6 flex flex-wrap space gap-96	">
+ <div className="bg-white py-8 px-6 flex flex-wrap  gap-44	items-center">
   <div className='shrink'><Typography.Title  level={1} style={{ margin: 0 }}>
         General
       </Typography.Title>
@@ -627,7 +629,8 @@ const handleSubmit2 = async (e: any) => {
         {[
                             // @ts-ignore
                             ...jobs]?.reverse().map((job:any, index:any) => (
-                                 <JobCard job={job} company={job.companyId} key={index}/>
+                              // @ts-ignore
+                                 <JobCard job={job} company={job.companyId} userID={user?.id} key={index}/>
                             ))}
     </div>
     ) : (

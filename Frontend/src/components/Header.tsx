@@ -22,7 +22,7 @@ const Header = () => {
                                 Whether you're an individual developer passionate about coding or a thriving enterprise
                                 seeking meaningful connections, TunisianDevJobs is here for you !
                             </p>
-                            <a href="/login">
+                            <a href="/Find-jobs">
                             <button className="px-7 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-300">Get Started</button>
                             </a>
                         </div>

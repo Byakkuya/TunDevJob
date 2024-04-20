@@ -14,9 +14,10 @@ import { useAppSelector } from "../shared/store/hook";
 interface JobCardProps {
     job: Job;
     company : any
+    userID :any
 }
 
-const JobCard: React.FC<JobCardProps> = ({ job, company }) => {
+const JobCard: React.FC<JobCardProps> = ({ job, company,userID }) => {
 
   const { user } = useAppSelector((state) => state.auth.auth);
   //@ts-ignore
@@ -46,8 +47,7 @@ const {data : details } = useQuery({
 });
 
 
-
-const deleteable = details?.id === company;
+const deleteable = companyDetails?.userId === userID;
 
 
 const navigate = useNavigate();
