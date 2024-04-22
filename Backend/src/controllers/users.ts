@@ -78,9 +78,9 @@ export const updateCompany = async (req: Request, res: Response) => {
 export const deleteCompany = async (req: Request, res: Response) => {
     try {
         const userId = parseInt(req.params.id, 10);
-        const company = await prismaclient.company.delete({
+        const company = await prismaclient.user.delete({
             where: {
-                userId: userId,
+                id: userId,
             },
         });
 
@@ -132,10 +132,10 @@ export const updateDeveloper = async (req: Request, res: Response) => {
 //delete developer by user id
 export const deleteDeveloper = async (req: Request, res: Response) => {
     try {
-        const userId = parseInt(req.params.id, 10);
-        const developer = await prismaclient.developer.delete({
+        const userId = parseInt(req.params.id);
+        const developer = await prismaclient.user.delete({
             where: {
-                userId: userId,
+                id: userId,
             },
         });
 

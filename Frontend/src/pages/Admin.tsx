@@ -69,7 +69,7 @@ const DeleteUser = (id : any) => {
 const nameJPG = id + '.jpg';
 console.log('Before Modal.confirm');
   Modal.confirm({
-    title: 'Are you sure you want to delete your account?',
+    title: 'Are you sure you want to delete this account?',
     content: 'This action cannot be undone.',
     okText: 'Yes',
     okType: 'danger',
@@ -86,6 +86,83 @@ console.log('Before Modal.confirm');
             marginTop: '10vh',
           },
         });
+        setTimeout(() => {
+          window.location.reload();
+      }, 1000);
+      } catch (error) {
+        message.error({
+          content: 'Something went wrong please try again',
+          duration: 3,
+          style: {
+            marginTop: '10vh',
+          },
+        });
+      }
+    },
+  });
+};
+const DeleteDeveloper = (id : any) => {
+  const namePDF = id + '.pdf';
+  const nameJPG = id + '.jpg';
+console.log('Before Modal.confirm');
+  Modal.confirm({
+    title: 'Are you sure you want to delete this account?',
+    content: 'This action cannot be undone.',
+    okText: 'Yes',
+    okType: 'danger',
+    cancelText: 'No',
+    onOk: async () => {
+      try {
+        await axiosInstance.delete(`/users/developer/${id}`);
+        deleteImageFromSupabase(nameJPG);
+        deleteResumeFromSupabase(namePDF);
+        message.success({
+          content: 'developer deleted  successfully',
+          duration: 6,
+          style: {
+            marginTop: '10vh',
+          },
+        });
+        setTimeout(() => {
+          window.location.reload();
+      }, 1000);
+      } catch (error) {
+        message.error({
+          content: 'Something went wrong please try again',
+          duration: 3,
+          style: {
+            marginTop: '10vh',
+          },
+        });
+      }
+    },
+  });
+};
+const DeleteCompany = (id : any) => {
+  const namePDF = id + '.pdf';
+  const nameJPG = id + '.jpg';
+console.log('Before Modal.confirm');
+  Modal.confirm({
+    title: 'Are you sure you want to delete this account?',
+    content: 'This action cannot be undone.',
+    okText: 'Yes',
+    okType: 'danger',
+    cancelText: 'No',
+    onOk: async () => {
+      try {
+        await axiosInstance.delete(`/users/company/${id}`);
+        deleteImageFromSupabase(nameJPG);
+        
+        message.success({
+          content: 'Company deleted  successfully',
+          duration: 6,
+          style: {
+            marginTop: '10vh',
+          },
+        });
+        setTimeout(() => {
+          window.location.reload();
+      }, 1000);
       } catch (error) {
         message.error({
           content: 'Something went wrong please try again',
@@ -117,6 +194,9 @@ const DeleteMessage = (id : any) => {
             marginTop: '10vh',
           },
         });
+        setTimeout(() => {
+          window.location.reload();
+      }, 1000);
       } catch (error) {
         message.error({
           content: 'Something went wrong please try again',
@@ -218,7 +298,7 @@ const columns1: TableProps<DataType>['columns'] = [
     key: 'action',
     render: (_, record) => (
       <Space size="middle">
-               <Button type="primary" danger>Delete</Button>
+        <Button type="primary" danger onClick={() => DeleteDeveloper(record.userId)}>Delete</Button>
 
       </Space>
     ),
@@ -259,7 +339,7 @@ const columns2: TableProps<DataType>['columns'] = [
     key: 'action',
     render: (_, record) => (
       <Space size="middle">
-                <Button type="primary" danger>Delete</Button>
+        <Button type="primary" danger onClick={() => DeleteCompany(record.userId)}>Delete</Button>
 
       </Space>
     ),
@@ -325,20 +405,18 @@ function Admin() {
 const admins ="";
 
 const {data: users, isLoading} = useQuery({
-    queryKey: ["users"],
-    queryFn: async () => {
-        const response = await axiosInstance.get("/users");
-        return response.data  ;
-        
-    },
-    
-    
+  queryKey: ["users"],
+  queryFn: async () => {
+      const response = await axiosInstance.get("/users");
+      //@ts-ignore
+      return response.data.filter(user => user.role !== 'ADMIN');
+  },
 });
 
 
 
 
-const {data: developers, isLoading : isloading1} = useQuery({
+const {data: developers, isLoading : isloading1,refetch} = useQuery({
   queryKey: ["developers"],
   queryFn: async () => {
       const response = await axiosInstance.get("/developers");
@@ -359,14 +437,13 @@ const {data: companies, isLoading : isloading2} = useQuery({
   
   
 });
-const {data: messagess, isLoading : isloading3} = useQuery({
+const {data: messagess, isLoading : isloading3, } = useQuery({
   queryKey: ["messages"],
   queryFn: async () => {
       const response = await axiosInstance.get("/messages");
       return response.data  ;
       
-  },
-  
+  }
   
 });
 
@@ -421,7 +498,6 @@ function getColumns(key: any) {
         />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }} />
         <Content style={{ margin: '0 16px' }}>
           <Table columns={getColumns(selectedKey)} dataSource={getDataSource(selectedKey)} loading={isLoading} />
 
