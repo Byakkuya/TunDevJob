@@ -5,6 +5,7 @@ import { prismaclient } from '..';
 export const getAllReports = async (req: Request, res: Response) => {
     try {
         const reports = await prismaclient.report.findMany();
+       
         res.status(200).json({reports});
     } catch (error) {
         console.error('Error fetching reports:', error);

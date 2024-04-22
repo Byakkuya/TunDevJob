@@ -63,7 +63,7 @@ interface DataType {
   currentPosition : string;
 
 }
-const handleDelete = (id : any) => {
+const DeleteUser = (id : any) => {
   console.log('handleDelete is called with id:', id);
   const namePDF = id + '.pdf';
 const nameJPG = id + '.jpg';
@@ -81,6 +81,37 @@ console.log('Before Modal.confirm');
         deleteResumeFromSupabase(namePDF);
         message.success({
           content: 'Your account has been deleted successfully',
+          duration: 6,
+          style: {
+            marginTop: '10vh',
+          },
+        });
+      } catch (error) {
+        message.error({
+          content: 'Something went wrong please try again',
+          duration: 3,
+          style: {
+            marginTop: '10vh',
+          },
+        });
+      }
+    },
+  });
+};
+const DeleteMessage = (id : any) => {
+ 
+  Modal.confirm({
+    title: 'Are you sure you want to delete this meesage?',
+    content: 'This action cannot be undone.',
+    okText: 'Yes',
+    okType: 'danger',
+    cancelText: 'No',
+    onOk: async () => {
+      try {
+        await axiosInstance.delete(`/messages/${id}`);
+        ;
+        message.success({
+          content: 'Message has been deleted successfully',
           duration: 6,
           style: {
             marginTop: '10vh',
@@ -142,7 +173,7 @@ const columns: TableProps<DataType>['columns'] = [
     render: (_, record) => (
      
         
-        <Button type="primary" danger onClick={() => handleDelete(record.id)}>Delete</Button>
+        <Button type="primary" danger onClick={() => DeleteUser(record.id)}>Delete</Button>
               
     ),
   },
@@ -257,7 +288,34 @@ const reports: TableProps<DataType>['columns'] = [
     ),
   },
 ];
-
+const messages: TableProps<DataType>['columns'] = [
+  {
+    title: 'Id',
+    dataIndex: 'id',
+    key: 'id',
+    render: (id) => <a>{id}</a>,
+  },
+  {
+    title: 'Email',
+    dataIndex: 'email',
+    key: 'email',
+  },
+  {
+    title: 'Message',
+    dataIndex: 'message',
+    key: 'message',
+  },
+  {
+    title: 'Action',
+    key: 'action',
+    render: (_, record) => (
+      <Space size="middle">
+        
+        <Button type="primary" danger onClick={() => DeleteMessage(record.id)}>Delete</Button>
+      </Space>
+    ),
+  },
+];
 function Admin() {
 
   const {
@@ -290,10 +348,21 @@ const {data: developers, isLoading : isloading1} = useQuery({
   
   
 });
+
 const {data: companies, isLoading : isloading2} = useQuery({
   queryKey: ["companies"],
   queryFn: async () => {
       const response = await axiosInstance.get("/companies");
+      return response.data  ;
+      
+  },
+  
+  
+});
+const {data: messagess, isLoading : isloading3} = useQuery({
+  queryKey: ["messages"],
+  queryFn: async () => {
+      const response = await axiosInstance.get("/messages");
       return response.data  ;
       
   },
@@ -315,6 +384,8 @@ const getDataSource = (key: any) => {
       return developers;
     case '4':
       return companies;
+    case '5':
+      return messagess;
     default:
       return [];
   }
@@ -328,6 +399,8 @@ function getColumns(key: any) {
       return columns1;
     case '4':
       return columns2;
+    case '5':
+      return messages;  
     default:
       return [];
   }
@@ -350,10 +423,7 @@ function getColumns(key: any) {
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }} />
         <Content style={{ margin: '0 16px' }}>
-        {/* <Table columns={columns} dataSource={users} loading={isLoading} />
-        <Table columns={columns1} dataSource={developers} loading={isloading1} />
-        <Table columns={columns2} dataSource={companies} loading={isloading2} /> */}
-                  <Table columns={getColumns(selectedKey)} dataSource={getDataSource(selectedKey)} loading={isLoading} />
+          <Table columns={getColumns(selectedKey)} dataSource={getDataSource(selectedKey)} loading={isLoading} />
 
         </Content>
        
