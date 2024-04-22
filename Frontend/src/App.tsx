@@ -22,6 +22,8 @@ import ApplyJob from "./components/ApplyJob";
 import NotFound from './components/NotFound';
 import PrivateRoute from "./components/PrivateRoute";
 import { useAppSelector } from './shared/store/hook';
+import Admin from './pages/Admin';
+import { JustAdmin } from './components/JustAdmin';
 
 
 
@@ -57,6 +59,15 @@ function App() {
                                     : "/profile/:id"
                             }
                             element={<Profile/>}
+                        />
+
+<Route
+                            path="/Dashboard"
+                            element={
+                                <PrivateRoute>
+                            <JustAdmin>  <Admin/> </JustAdmin>
+                            </PrivateRoute>
+                              }
                         />
                         
                         <Route path="/Company-profile" element={<CompanyProfile/>}/>

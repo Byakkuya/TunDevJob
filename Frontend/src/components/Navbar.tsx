@@ -9,6 +9,8 @@ import { set } from 'react-hook-form';
 const Navbar=()=>{
 
     const {user} = useAppSelector((state) => state.auth.auth);
+    //@ts-ignore
+    const role = user?.role;
     const {isAuthenticated} = useAppSelector((state) => state.auth.auth);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -78,11 +80,22 @@ const Navbar=()=>{
 
                     {/* Buttons for large devices */}
                     
-                    {isAuthenticated ? (
+                    {isAuthenticated  ? (
                         <div className="sm:flex ssm:flex space-x-12 hidden lg:flex items-center">
-                            <a href="/profile" className="transition-colors text-blue-gray-900 hover:text-blue-500 focus:text-blue-500">
+
+{role === 'ADMIN' ? (
+        <div className="sm:flex ssm:flex space-x-12 hidden lg:flex items-center">
+            <Link to="/Dashboard" className="block text-base transition-colors text-blue-gray-900 hover:text-blue-500 focus:text-blue-500">
+                Dashboard
+            </Link>
+        </div>
+    ) :
+    <a href="/profile" className="transition-colors text-blue-gray-900 hover:text-blue-500 focus:text-blue-500">
                                 Profile
                             </a>
+    
+    }
+                            
                             <button  className="transition-colors text-blue-gray-900 hover:text-blue-500 focus:text-blue-500" onClick={Logout}>
                                 Logout
                             </button>
