@@ -87,6 +87,23 @@ export const getTestimonialByUserId = async (req: Request, res: Response) => {
     
     }
 }
+export const getTestimonialRow = async (req: Request, res: Response) => {
+    //the user id in the request url
+    const { id } = req.params;
+    try {
+        const testimonial = await prismaclient.testimonial.findUnique({
+            where: {
+                id: Number(id)
+            }
+        });
+        res.status(200).json(testimonial);
+    } catch (error) {
+        console.error('Error fetching testimonials:', error);
+        res.status(500).json({error: 'Internal server error'});
+    
+    }
+}
+
 
 // update a testimonial by id
 export const updateTestimonial = async (req: Request, res: Response) => {

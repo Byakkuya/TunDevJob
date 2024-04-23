@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Space, Table, Tag, message } from 'antd';
+import { Avatar, Card, Space, Table, Tag, message } from 'antd';
 import type { TableProps } from 'antd';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { axiosInstance } from '../lib/axios';
@@ -16,9 +16,11 @@ import { Layout, Menu, theme } from 'antd';
 import { Button } from 'antd';
 import { deleteImageFromSupabase, deleteResumeFromSupabase } from '../lib/supabase';
 import { Modal } from 'antd';
+import ReviewCard from '../components/ReviewCard';
+import Loading from '../components/Loading';
 
 
-const { Header, Content, Sider } = Layout;
+const {  Content, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -61,6 +63,16 @@ interface DataType {
   city: string;
   fullAddress : string;
   currentPosition : string;
+  createdAt : string;
+  companyId : number;
+  reason : string;
+  message : string;
+  company : string;
+  testimonialId : number;
+  rating : number;
+  text : string;
+  developerId : number;
+
 
 }
 const DeleteUser = (id : any) => {
@@ -209,6 +221,74 @@ const DeleteMessage = (id : any) => {
     },
   });
 };
+const DeleteReport = (id : any) => {
+   
+  Modal.confirm({
+    title: 'Are you sure you want to delete this report?',
+    content: 'This action cannot be undone.',
+    okText: 'Yes',
+    okType: 'danger',
+    cancelText: 'No',
+    onOk: async () => {
+      try {
+        await axiosInstance.delete(`/reports/${id}`);
+        ;
+        message.success({
+          content: 'Report has been deleted successfully',
+          duration: 6,
+          style: {
+            marginTop: '10vh',
+          },
+        });
+        setTimeout(() => {
+          window.location.reload();
+      }, 1000);
+      } catch (error) {
+        message.error({
+          content: 'Something went wrong please try again',
+          duration: 3,
+          style: {
+            marginTop: '10vh',
+          },
+        });
+      }
+    },
+  });
+};
+const DeleteTestimonial = (id : any) => {
+   
+  Modal.confirm({
+    title: 'Are you sure you want to delete this testimonial?',
+    content: 'This action cannot be undone.',
+    okText: 'Yes',
+    okType: 'danger',
+    cancelText: 'No',
+    onOk: async () => {
+      try {
+        await axiosInstance.delete(`/testimonials/${id}`);
+        ;
+        message.success({
+          content: 'Testimonial has been deleted successfully',
+          duration: 6,
+          style: {
+            marginTop: '10vh',
+          },
+        });
+        setTimeout(() => {
+          window.location.reload();
+      }, 1000);
+      } catch (error) {
+        message.error({
+          content: 'Something went wrong please try again',
+          duration: 3,
+          style: {
+            marginTop: '10vh',
+          },
+        });
+      }
+    },
+  });
+}
 const columns: TableProps<DataType>['columns'] = [
   {
     title: 'Id',
@@ -345,6 +425,113 @@ const columns2: TableProps<DataType>['columns'] = [
     ),
   },
 ];
+
+//@ts-ignore
+const TestimonialColumn = ({ testimonialId }) => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [testimonialData, setTestimonialData] = useState(null);
+
+  const { data: testimonial, isLoading } = useQuery({
+    queryKey: ["testimonial",testimonialId],
+    queryFn: async () => {
+      const response = await axiosInstance.get(`/testimonials/row/${testimonialId}`);
+      return response.data;
+    },
+  });
+  
+  const { data: dev, isLoading: load1 } = useQuery({
+    queryKey: ["dev"],
+    queryFn: async () => {
+      const response = await axiosInstance.get(`/developers/${testimonial?.developerId}`);
+      return response.data;
+    },
+  });
+  function showModal() {
+    
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+  return (
+    <>
+      <a onClick={showModal}>click to see</a>
+      <Modal title="Testimonial" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} footer={null}>
+       {isLoading ? <p>Loading...</p> : (
+         <>
+         
+          <ReviewCard id={testimonialId} developerName={dev?.name} photo={dev?.profilePicture}  rating={testimonial?.rating} comment={testimonial?.text} userId={testimonial.userId} companyId={testimonial?.companyId} />
+    
+          </>
+        )}
+
+      </Modal>
+    </>
+  );
+};
+//@ts-ignore
+const CompanyColumn = ({ companyId }) => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [testimonialData, setTestimonialData] = useState(null);
+
+  const { data: comp, isLoading } = useQuery({
+    queryKey: ["comp", companyId], // Use companyId as part of the queryKey
+    queryFn: async () => {
+      const response = await axiosInstance.get(`/companies/${companyId}`);
+      return response.data;
+    },
+  });
+  console.log(comp)
+  function showModal() {
+    
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+  return (
+    <>
+      <a onClick={showModal}>click to see</a>
+      <Modal title="Company" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} footer={null}>
+       {isLoading ? <Loading/> : (
+         <>
+        
+        <div className="flex flex-col px-6 py-4">
+          <div className="flex flex-wrap items-center mb-4">
+            <Avatar size={64} src={comp?.logo} />
+            <div className="font-bold text-xl ml-4">{comp?.name}</div>
+          </div>
+          <div className="mb-4">
+            <p className="text-gray-700 text-base">{comp?.description}</p>
+          </div>
+          <div>
+            <p className="text-gray-700 text-base">{comp?.fullAddress}</p>
+            <p className="text-gray-700 text-base">{comp?.number}</p>
+            <div className='flex flex-col '>
+            <a href={comp?.linkedin} className="text-blue-500 hover:text-blue-700">LinkedIn</a>
+            <a href={comp?.website} className="text-blue-500 hover:text-blue-700">Website</a>
+            </div>
+          </div>
+        </div>
+       </>
+        )}
+
+      </Modal>
+    </>
+  );
+};
 const reports: TableProps<DataType>['columns'] = [
   {
     title: 'Id',
@@ -352,9 +539,30 @@ const reports: TableProps<DataType>['columns'] = [
     key: 'id',
     render: (id) => <a>{id}</a>,
   },
+  {
+    title: 'Company',
+    dataIndex: 'companyId',
+    render: (companyId) => {
+      return <CompanyColumn companyId={companyId} />;
+    }
+  },
+ {
+  title: 'Testimonial',
+  dataIndex: 'testimonialId',
+  render: (testimonialId, record) => <TestimonialColumn testimonialId={testimonialId} />,
+ 
+ },
+{
+title: 'reason',
+dataIndex: 'reason',
+render: (reason) => <a>{reason}</a>,
 
-  
-  
+},
+{
+  title:'created at',
+  dataIndex: 'createdAt',
+  render: (createdAt) => <a>{createdAt}</a>,
+},
   
   
   {
@@ -363,7 +571,9 @@ const reports: TableProps<DataType>['columns'] = [
     render: (_, record) => (
       <Space size="middle">
         
-        <Button type="primary" danger>Delete</Button>
+      <Button type="primary" danger onClick={() => DeleteReport(record.id)}>delete report</Button>  
+      <Button type="primary" danger onClick={() => DeleteTestimonial(record.testimonialId)}>Delete testimonial</Button>
+
       </Space>
     ),
   },
@@ -414,9 +624,7 @@ const {data: users, isLoading} = useQuery({
 });
 
 
-
-
-const {data: developers, isLoading : isloading1,refetch} = useQuery({
+const {data: developers, isLoading : isloading1,} = useQuery({
   queryKey: ["developers"],
   queryFn: async () => {
       const response = await axiosInstance.get("/developers");
@@ -446,6 +654,16 @@ const {data: messagess, isLoading : isloading3, } = useQuery({
   }
   
 });
+const {data: reportss, isLoading : isloading4, } = useQuery({
+  queryKey: ["reports"],
+  queryFn: async () => {
+      const response = await axiosInstance.get("/reports");
+      return response.data  ;
+      
+  }
+  
+});
+
 
 const [selectedKey, setSelectedKey] = useState('1');
 
@@ -463,6 +681,8 @@ const getDataSource = (key: any) => {
       return companies;
     case '5':
       return messagess;
+    case '6':
+      return reportss;
     default:
       return [];
   }
@@ -477,7 +697,9 @@ function getColumns(key: any) {
     case '4':
       return columns2;
     case '5':
-      return messages;  
+      return messages; 
+    case '6':
+      return reports; 
     default:
       return [];
   }
