@@ -22,8 +22,42 @@ import { Modal as antdmodal } from 'antd';
 import { Button as AntButton } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import JobCard from './JobCard';
+import { MdOutlineWork } from "react-icons/md";
+import { MdOutlineRateReview } from "react-icons/md";
 
+import {
+  DesktopOutlined,
+  FileOutlined,
+  PieChartOutlined,
+  InfoCircleOutlined,
+} from '@ant-design/icons';
+import type { MenuProps } from 'antd';
+import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { SiDatabricks } from "react-icons/si";
 
+const { Header, Content, Footer, Sider } = Layout;
+
+type MenuItem = Required<MenuProps>['items'][number];
+
+function getItem(
+  label: React.ReactNode,
+  key: React.Key,
+  icon?: React.ReactNode,
+  children?: MenuItem[],
+): MenuItem {
+  return {
+    key,
+    icon,
+    children,
+    label,
+  } as MenuItem;
+}
+const items: MenuItem[] = [
+  getItem('Infos', '1', <SiDatabricks />),
+  getItem('Genral', '2', <PieChartOutlined />),
+  getItem('Your Jobs', '3', <MdOutlineWork />),
+  getItem('Testimonials', '4', <MdOutlineRateReview />),
+];
 
 function UserCompany({ userId }: { userId: string }) {
 
@@ -349,12 +383,27 @@ const handleSubmit2 = async (e: any) => {
       },
     });
   };
+  const [selectedMenuItem, setSelectedMenuItem] = useState('1');
+
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
+  
  return (
 
-<div>
-  <div className="flex flex-col gap-8 mt-20 justify-center items-start min-h-screen ">
+<div className='mt-20'>
+<Layout style={{ minHeight: '100vh' }}>
+      <Sider theme='light'>
+        <div className="demo-logo-vertical" />
+        <Menu theme="light" defaultSelectedKeys={['1']} mode="inline" items={items} onClick={({ item, key, keyPath, domEvent }) => setSelectedMenuItem(key)} />
+      </Sider>
+      <Layout>
+        <Content style={{ margin: '0 16px' }}>
+
 
   {/* Details*/ }
+  {selectedMenuItem === '1' && (
+
   <div className="bg-white py-8 px-6 ">
   <Typography.Title  level={1} style={{ margin: 0 }}>
         Company Details
@@ -500,7 +549,10 @@ const handleSubmit2 = async (e: any) => {
       
     </form>
   </div>
+  )}
+  
   {/* General*/}
+  {selectedMenuItem === '2' && (
  <div className="bg-white py-8 px-6 flex flex-wrap  gap-44	items-center">
   <div className='shrink'><Typography.Title  level={1} style={{ margin: 0 }}>
         General
@@ -587,11 +639,11 @@ const handleSubmit2 = async (e: any) => {
 
   </div>
  
-  
-  </div>
+)}
+ 
 
 
-
+ {selectedMenuItem === '4' && (
 <div className="bg-white py-8 px-6">
     <Typography.Title  level={1} style={{ margin: 0 }}>
         Reviews
@@ -612,8 +664,8 @@ const handleSubmit2 = async (e: any) => {
 </div>
 
 </div>
-
-
+)}
+{selectedMenuItem === '3' && (
 <div className="bg-white py-8 px-6">
     <Typography.Title  level={1} style={{ margin: 0 }}>
         Your Jobs
@@ -641,7 +693,11 @@ const handleSubmit2 = async (e: any) => {
 </div>
 
 </div>
-
+)}
+</Content>
+       
+       </Layout>
+     </Layout>
 
 </div>
 

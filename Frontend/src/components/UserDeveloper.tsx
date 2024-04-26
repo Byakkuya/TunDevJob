@@ -1,12 +1,11 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react'
 import { axiosInstance } from '../lib/axios';
-import { deleteImageFromSupabase, deleteResumeFromSupabase, getImageFromSupabase, uploadResumeToSupabase, uploadimageToSupabase } from '../lib/supabase';
+import { deleteImageFromSupabase, deleteResumeFromSupabase, uploadResumeToSupabase, uploadimageToSupabase } from '../lib/supabase';
 import { useAppDispatch, useAppSelector } from '../shared/store/hook';
 import { Typography, message } from 'antd';
-import { FaUser, FaPhone, FaMapMarkerAlt, FaFileImage, FaBuilding, FaAlignJustify, FaLinkedin, FaGlobe } from 'react-icons/fa';
+import {  FaFileImage, } from 'react-icons/fa';
 import Avatar from '@mui/material/Avatar';
-import PhoneInput from "antd-phone-input";
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../shared/store/reducers/auth';
@@ -15,19 +14,51 @@ import { IoDocumentTextOutline, IoSaveOutline } from "react-icons/io5";
 import LoadingButton from '@mui/lab/LoadingButton';
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { styled } from '@mui/material/styles';
-import { MdDeleteOutline } from 'react-icons/md';
 import Loading from './Loading';
 import { Modal } from 'antd';
 import { Button as AntButton } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { DownloadOutlined } from '@ant-design/icons';
-import { hashSync } from 'bcrypt-ts';
+import {
+  PieChartOutlined,
+  InfoCircleOutlined,
+} from '@ant-design/icons';
+import type { MenuProps } from 'antd';
+import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { SiDatabricks } from "react-icons/si";
 
+const { Header, Content, Footer, Sider } = Layout;
 
+type MenuItem = Required<MenuProps>['items'][number];
+
+function getItem(
+  label: React.ReactNode,
+  key: React.Key,
+  icon?: React.ReactNode,
+  children?: MenuItem[],
+): MenuItem {
+  return {
+    key,
+    icon,
+    children,
+    label,
+  } as MenuItem;
+}
+const items: MenuItem[] = [
+  getItem('Genral', '1', <PieChartOutlined />),
+  getItem('Details', '2', <SiDatabricks />),
+  getItem('other', '3', <InfoCircleOutlined />),
+  
+];
 
 
 function UserDeveloper({ userId }: { userId: string }) {
+  const [selectedMenuItem, setSelectedMenuItem] = useState('1');
 
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
+  
  
 
 
@@ -344,12 +375,25 @@ const handleSubmit2 = async (e: any) => {
     return <Loading />;
 }
 
+
+
  return (
-<div className="flex flex-col gap-8 mt-20 justify-center items-start min-h-screen ">
+
+<div className='mt-20'>
+
+<Layout style={{ minHeight: '100vh' }}>
+      <Sider theme='light'>
+        <div className="demo-logo-vertical" />
+        <Menu theme="light" defaultSelectedKeys={['1']} mode="inline" items={items} onClick={({ item, key, keyPath, domEvent }) => setSelectedMenuItem(key)} />
+      </Sider>
+      <Layout>
+        <Content style={{ margin: '0 16px' }}>
+
 
 
   {/* Details*/ }
-  <div className="bg-white py-8 px-6 ">
+  {selectedMenuItem === '2' && (
+  <div className="bg-white py-8 px-6 mt-10 ">
   <Typography.Title  level={1} style={{ margin: 0 }}>
         Developer Details
       </Typography.Title>
@@ -519,8 +563,10 @@ const handleSubmit2 = async (e: any) => {
       
     </form>
   </div>
+  )}
   {/* General*/}
- <div className="bg-white py-8 px-6 ">
+  {selectedMenuItem === '1' && (
+ <div className="bg-white py-8 px-6 mt-10 ">
 <Typography.Title  level={1} style={{ margin: 0 }}>
         General
       </Typography.Title>
@@ -585,15 +631,25 @@ const handleSubmit2 = async (e: any) => {
     </form>
 
   </div>
-  <div className="bg-white py-8 px-6 ">
+
+)}
+  {selectedMenuItem === '3' && (
+
+  <div className="bg-white py-8 px-6 items-center mt-10">
   <AntButton className="mr-2" type="primary" danger icon={<DeleteOutlined />} onClick={handleDelete}>
   Delete Your Account
 </AntButton>
   
   </div>
-  
-</div>
+  )}
+ 
 
+</Content>
+       
+       </Layout>
+     </Layout>
+
+</div>
 
 
  )
