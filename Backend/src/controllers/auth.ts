@@ -224,3 +224,20 @@ export const deleteUser = async (req: Request, res: Response) => {
       res.status(500).json({error: 'Internal server error'});
   }
 };
+
+// reset password
+export const resetPassword = async (req: Request, res: Response) => {
+  try {
+      const { email, password } = req.body;
+      const hashedPassword = hashSync(password, 10);
+      const user = await prismaclient.user.update({
+          where: { email },
+          data: { password: hashedPassword }
+      });
+      res.status(200).json({message: 'Password reset successfully', user});
+  }
+  catch (error) {
+      console.error('Error resetting password:', error);
+      res.status(500).json({error: 'Internal server error'});
+  }
+};

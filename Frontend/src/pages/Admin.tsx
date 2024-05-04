@@ -125,7 +125,7 @@ console.log('Before Modal.confirm');
     cancelText: 'No',
     onOk: async () => {
       try {
-        await axiosInstance.delete(`/users/developer/${id}`);
+        await axiosInstance.delete(`/users/${id}`);
         deleteImageFromSupabase(nameJPG);
         deleteResumeFromSupabase(namePDF);
         message.success({
@@ -162,7 +162,7 @@ console.log('Before Modal.confirm');
     cancelText: 'No',
     onOk: async () => {
       try {
-        await axiosInstance.delete(`/users/company/${id}`);
+        await axiosInstance.delete(`/users/${id}`);
         deleteImageFromSupabase(nameJPG);
         
         message.success({
