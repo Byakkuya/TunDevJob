@@ -4,10 +4,9 @@ const How = () => {
     return (
         <div className="">
             <div className="md:w-3/5 mx-auto">
-                <h2 className="ssm:mx-2 text-4xl text-neutral-700 font-semibold mb-4 md:w-4/5"> As a Developer you can dsfqsdqsq qsdfqds</h2>
+                <h2 className="ssm:mx-2 text-4xl text-neutral-700 font-semibold mb-4 md:w-4/5">How To start </h2>
                 <p className="ssm:mx-2 text-sm text-neutral-600 mb-8">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis metus rhoncus, dapibus nibh
-                    sagittis, posuere magna.
+                Using our platform is incredibly easy. All you need to do is follow a few simple steps. Start by creating your profile, then browse through our extensive list of job opportunities. Once you find a job that matches your skills and interests, apply with just a click. Our user-friendly interface and streamlined application process make job hunting a breeze.
                 </p>
             </div>
 

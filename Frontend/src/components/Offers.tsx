@@ -6,6 +6,7 @@ import {MdDashboard} from "react-icons/md";
 import { MdWork } from "react-icons/md";
 import { BsPersonWorkspace } from "react-icons/bs";
 import mob from "../assets/img/mob.png"
+import work from "../assets/svg/work-space.svg"
 
 const Offers = () => {
     return (
@@ -19,9 +20,9 @@ const Offers = () => {
                                     <img src={mob} alt=""/>
                                 </div>
                                 <div className="md:w-3/5 mx-auto">
-                                    <h2 className="text-4xl text-neutral-700 font-semibold mb-4 md:w-4/5">As a Developer you can ....</h2>
+                                    <h2 className="text-4xl text-neutral-700 font-semibold mb-4 md:w-4/5">As a Developer you can</h2>
                                     <p className="md:w-3/4 text-sm text-neutral-600 mb-8">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis metus rhoncus, dapibus nibh sagittis, posuere magna. In hac habitasse platea dictumst. Aliquam sodales eu eros non maximus. Nulla tincidunt eu risus eu pellentesque. Duis a leo nec nisl molestie sollicitudin
+                                    On this platform, as a developer, you can explore and apply for numerous job opportunities that match your skills and interests. You can browse through a wide range of job listings, apply with a single click, track your application status, and connect directly with potential employers. This platform is designed to make your job search easier and more efficient.
                                     </p>
 
                                 </div>
@@ -37,17 +38,16 @@ const Offers = () => {
                                 className="md:w-11/12 mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
 
                                 <div className="md:w-3/5 mx-auto">
-                                    <h2 className="text-4xl text-neutral-700 font-semibold mb-4 md:w-4/5">As An Enterprise
-                                        you can ....</h2>
+                                    <h2 className="text-4xl text-neutral-700 font-semibold mb-4 md:w-4/5">As a Company
+                                        you can</h2>
                                     <p className="md:w-3/4 text-sm text-neutral-600 mb-8">
-                                        Post Offers with details so you can find the best fit for
-                                        your company
+                                    Post your job offers with comprehensive details on our platform. This allows you to find the best fit for your company. By providing a detailed description of the job role, responsibilities, required skills, and qualifications, you can attract the right candidates. This not only streamlines your hiring process but also ensures that you find a candidate who aligns with your company's mission and values.
 
                                     </p>
 
                                 </div>
-                                <div className="w-52 h-52">
-                                    <img src={mob} alt=""/>
+                                <div className="w-72 h-72">
+                                    <img src={work} alt=""/>
                                 </div>
 
                             </div>

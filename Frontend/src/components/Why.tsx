@@ -9,7 +9,7 @@ const Why = () => {
                 {/* Move this div to the left */}
                 <div className="lg:w-1/4">
                     <h3 className="text-3xl">Why we are better than others</h3>
-                    <p className="text-base text-gray-500">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vel rhoncus nisl. Nullam condimentum arcu in purus pharetra, ac congue lectus rhoncus.</p>
+                    <p className="text-base text-gray-500">Our platform stands out for its user-friendly interface, comprehensive job listings, and efficient application process. We prioritize transparency and communication, ensuring that job seekers can easily connect with potential employers. Moreover, our advanced search features allow users to find jobs that perfectly match their skills and interests.</p>
                 </div>
 
                 {/* Move this div to the right */}
@@ -20,7 +20,7 @@ const Why = () => {
           items-center flex justify-center hover:-translate-y-4 transition-all duration-300 cursor-pointer">
                             <div>
                                 <img src={amico} alt=""/>
-                                <h5 className="text-2xl font-semibold text-black px-5 text-center mt-5"></h5>
+                                <h5 className="text-2xl font-semibold text-black px-5 text-center mt-5">Fast</h5>
 
                             </div>
                         </div>
@@ -30,7 +30,7 @@ const Why = () => {
           items-center flex justify-center hover:-translate-y-4 transition-all duration-300 cursor-pointer md:mt-16">
                             <div>
                                 <img src={amico} alt=""/>
-                                <h5 className="text-2xl font-semibold text-black px-5 text-center mt-5"></h5>
+                                <h5 className="text-2xl font-semibold text-black px-5 text-center mt-5">Minimalist</h5>
                             </div>
                         </div>
 
@@ -39,7 +39,7 @@ const Why = () => {
           items-center flex justify-center hover:-translate-y-4 transition-all duration-300 cursor-pointer">
                             <div>
                                 <img src={amico} alt=""/>
-                                <h5 className="text-2xl font-semibold text-black px-5 text-center mt-5">Reason 3</h5>
+                                <h5 className="text-2xl font-semibold text-black px-5 text-center mt-5">Secure</h5>
                             </div>
                         </div>
                     </div>

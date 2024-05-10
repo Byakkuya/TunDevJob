@@ -14,8 +14,7 @@ const Home = () => {
         <Offers/>
         <Why/>
         <How/>
-            <Contact/>
-
+        <Contact/>
         </>
 
     );

@@ -57,8 +57,9 @@ const Contact = () => {
                 <div className="flex flex-col space-y-8 justify-between">
                     <div>
                     <h1 className="font-bold text-4xl tracking-wide">Contact Us</h1>
-                        <p className="pt-2 text-cyan-100 text-sm ">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vel rhoncus nisl. Nullam condimentum arcu in purus pharetra, ac congue lectus rhoncus.                        </p>
+                        <p className="pt-2 text-white text-sm ">
+                        You can easily reach out to us directly from this platform. We're committed to providing you with the support you need. If you have any questions, concerns, or feedback, don't hesitate to contact us. You can also find more information about our services on our FAQ page. We're here to help you navigate your job search journey.
+                                                   </p>
                     </div>
                     <div className="flex flex-col space-y-4">
                         <div className="inline-flex space-x-2 items-center ">
