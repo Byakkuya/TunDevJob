@@ -50,6 +50,7 @@ const Navbar=()=>{
         {link: "Home",path:"home"},
         {link: "FindJobs",path:"Find-jobs"},
         {link: "Companies",path:"Companies"},
+ 
 
 
 
@@ -81,14 +82,12 @@ const Navbar=()=>{
                     {/* Buttons for large devices */}
                     
                     {isAuthenticated  ? (
-                        <div className="sm:flex ssm:flex space-x-12 hidden lg:flex items-center">
+                        <div className="sm:flex ssm:flex space-x-4 hidden lg:flex items-center">
 
 {role === 'ADMIN' ? (
-        <div className="sm:flex ssm:flex space-x-12 hidden lg:flex items-center">
-            <Link to="/Dashboard" className="block text-base transition-colors text-blue-gray-900 hover:text-blue-500 focus:text-blue-500">
-                Dashboard
-            </Link>
-        </div>
+        <a href="/Dashboard" className="transition-colors text-blue-gray-900 hover:text-blue-500 focus:text-blue-500">
+                                Dashboard
+                            </a>
     ) :
     <a href="/profile" className="transition-colors text-blue-gray-900 hover:text-blue-500 focus:text-blue-500">
                                 Profile
@@ -101,7 +100,7 @@ const Navbar=()=>{
                             </button>
                         </div>
                     ) : (
-                        <div className=" sm:flex ssm:flex space-x-12 hidden lg:flex items-center">
+                        <div className=" sm:flex ssm:flex space-x-8 hidden lg:flex items-center">
                             <a href="/login" className="transition-colors text-blue-gray-900 hover:text-blue-500 focus:text-blue-500">
                                 Login
                             </a>
@@ -143,13 +142,13 @@ const Navbar=()=>{
             </nav>
 
             {/* nav items for mobile devices*/}
-            <div className={`space-y-4 ssm:space-y-1 px-4 mt-16 py-7 bg-gradient-to-t from-indigo-400 to-[#e9f8ff] ${ isMenuOpen ? "block fixed top-0 right-0 left-0":"hidden"}`}>
+            <div className={`space-y-4 ssm:space-y-1 px-4 mt-16 py-7 bg-gray-50 ${ isMenuOpen ? "block fixed top-0 right-0 left-0":"hidden"}`}>
                 {navItems.map(({link, path}) => (
-                    <li key={path} className="first:font-medium">
-                        <Link to={path} className="block text-base text-white hover:text-black">
+                    
+                        <Link to={path} className="block text-base text-black hover:text-black ">
                             {link}
                         </Link>
-                    </li>
+                    
                 ))}
             </div>
         </header>

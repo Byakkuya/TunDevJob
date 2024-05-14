@@ -52,7 +52,7 @@ const Contact = () => {
 
     return (
         <>
-        <div className="flex w-full min-h-screen justify-center items-center ">
+        <div className="flex w-full min-h-screen justify-center items-center ssm:mt-4">
             <div className="flex flex-col md:flex-row span-x-6 span-y-6 bg-gradient-to-r from-indigo-400 to-[#ECFDFF] w-full max-w-4xl p-8 rounded-xl shadow-lg text-white">
                 <div className="flex flex-col space-y-8 justify-between">
                     <div>

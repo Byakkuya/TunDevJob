@@ -68,14 +68,6 @@ const FindJobs: React.FC<FindJobsProps> = () => {
         
         
     });
-    
-    
-console.log(jobs);
-
-
-
-
-
 
 
     const toggleVisibility = (section:string) => {
@@ -221,7 +213,7 @@ console.log(jobs);
         </div>
         ) : (
 
-            <div className='container sm:mt-2 mx-auto flex gap-6 2xl:gap-10 md:px-5 py-0 md:py-6 '>
+            <div className='container sm:mx-4 mx-auto flex gap-6 2xl:gap-10 md:px-5 py-0 md:py-6  '>
                 <div className='hidden md:flex flex-col w-1/6 h-fit bg-white shadow-sm p-4 rounded-xl bg-slate-50'>
                     <p className='text-lg font-semibold text-slate-600 mb-4'>Filter Search</p>
                     
@@ -329,8 +321,8 @@ console.log(jobs);
                             Available
                         </p>
 
-                        <div className='flex flex-col md:flex-row gap-0 md:gap-2 md:items-center' style={{zIndex: 1}}>
-    <p className='text-sm md:text-base'>Sort By:</p>
+                        <div className='flex flex-col sm:flex-row sm:mt-4 sm:p-4 sm:gap-2 md:flex-row gap-0 md:gap-2 md:items-center' style={{zIndex: 1}}>
+    <p className='text-sm md:text-base ssm:pt-2' >Sort By:</p>
     <ListBox sort={sort} setSort={handleSortChangeFromListBox}/>
 </div>
 

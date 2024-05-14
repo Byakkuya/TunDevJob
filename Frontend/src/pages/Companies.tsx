@@ -58,13 +58,13 @@ useEffect(() => {
 
 
     return (
-        <div className='mt-10 container mx-auto flex flex-col gap-5 2xl:gap-10 px-5 md:px-0 py-6 w-full '>
-            <div className='flex items-center justify-between mb-4'>
+        <div className='mt-10 container mx-auto flex flex-col gap-5 2xl:gap-10 px-5 md:px-0 py-6 w-full ssm:gap-2'>
+            <div className='flex items-center justify-between mb-4 ssm:gap-2'>
                 <p className='text-sm md:text-base'>
                     Showing: <span className='font-semibold'> {numberOfCompanies}</span> Companies Available
                 </p>
 
-                <div className='flex flex-col md:flex-row gap-0 md:gap-2 md:items-center mr-6 mr-3'>
+                <div className='flex flex-col md:flex-row gap-0 md:gap-2 md:items-center mr-6 mr-3 ssm:mt-2'>
                     <p className='text-sm md:text-base '>Search:</p>
                     <Input
                         className="rounded-md border-2 border-gray-300  "
