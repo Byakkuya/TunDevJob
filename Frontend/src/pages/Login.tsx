@@ -132,13 +132,13 @@ const Login = () => {
         border-radius: 0.25rem !important;
     }
 `}</style>
-                    <Button
-  className="w-full mb-4 mt-6 text-white bg-indigo-400 hover:bg-indigo-500"
+<Button
+  className={`w-full mb-4 mt-6 text-white ${!formData.email || !formData.password ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-400 hover:bg-indigo-500'}`}
   type="primary"
+  disabled={!formData.email || !formData.password}
   onClick={handleSubmit}
   style={{ borderRadius: '999px', fontSize: '18px' }}
-    loading={isPending}
-  
+  loading={isPending}
 >
   Login
 </Button>
