@@ -11,6 +11,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { axiosInstance } from '../lib/axios';
 import { message } from 'antd';
 import Loading from './Loading';
+import { Modal as mantd } from 'antd';
 
 
 import { Avatar, Card, CardContent, Typography, Box } from '@material-ui/core';
@@ -126,9 +127,13 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ id, developerName, photo, ratin
             
             
             onClick={() => {
-                if (window.confirm('Are you sure you want to delete this review?')) {
-                    mutate();
-                }
+                mantd.confirm({
+                    title: 'Confirm',
+                    content: 'Are you sure you want to delete this review?',
+                    onOk() {
+                        mutate();
+                    },
+                });
             }
             }
             >Delete</Button>

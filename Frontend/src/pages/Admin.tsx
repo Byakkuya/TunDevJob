@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
-import { Avatar, Card, Space, Table, Tag, message } from 'antd';
+import { Avatar, Space, Table, Tag, message } from 'antd';
 import type { TableProps } from 'antd';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { axiosInstance } from '../lib/axios';
 import {
-  DesktopOutlined,
   WarningOutlined,
-  PieChartOutlined,
-  TeamOutlined,
   UserOutlined,
   MessageOutlined 
 } from '@ant-design/icons';
@@ -18,6 +15,8 @@ import { deleteImageFromSupabase, deleteResumeFromSupabase } from '../lib/supaba
 import { Modal } from 'antd';
 import ReviewCard from '../components/ReviewCard';
 import Loading from '../components/Loading';
+import { ResponsiveContainer, PieChart, Pie, Legend, Cell } from 'recharts';
+import { BarChart,LineChart, ComposedChart,Line,Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 
 
 const {  Content, Sider } = Layout;
@@ -79,7 +78,6 @@ const DeleteUser = (id : any) => {
   console.log('handleDelete is called with id:', id);
   const namePDF = id + '.pdf';
 const nameJPG = id + '.jpg';
-console.log('Before Modal.confirm');
   Modal.confirm({
     title: 'Are you sure you want to delete this account?',
     content: 'This action cannot be undone.',
@@ -606,7 +604,10 @@ const messages: TableProps<DataType>['columns'] = [
     ),
   },
 ];
-function Admin() {
+
+
+
+function Admin() { 
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -622,7 +623,19 @@ const {data: users, isLoading} = useQuery({
       return response.data.filter(user => user.role !== 'ADMIN');
   },
 });
+//@ts-ignore
+const developersn = users ? users.filter(user => user.role === 'DEVELOPER') : [];
+const numberOfDevelopers = developersn.length;
 
+//@ts-ignore
+const compn = users ? users.filter(user => user.role === 'COMPANY') : [];
+const numberOfCompanies = compn.length;
+
+
+const chartData = [
+  { name: 'Developers', value: numberOfDevelopers },
+  { name: 'Companies', value: numberOfCompanies },
+];
 
 const {data: developers, isLoading : isloading1,} = useQuery({
   queryKey: ["developers"],
@@ -649,20 +662,23 @@ const {data: messagess, isLoading : isloading3, } = useQuery({
   queryKey: ["messages"],
   queryFn: async () => {
       const response = await axiosInstance.get("/messages");
-      return response.data  ;
+      return response.data.sort((a: any, b: any) => a.property - b.property);
       
   }
+
   
 });
+
 const {data: reportss, isLoading : isloading4, } = useQuery({
   queryKey: ["reports"],
   queryFn: async () => {
       const response = await axiosInstance.get("/reports");
-      return response.data  ;
+      return response.data.sort((a: any, b: any) => a.property - b.property); 
       
   }
   
 });
+console.log(reportss)
 
 
 const [selectedKey, setSelectedKey] = useState('1');
@@ -705,6 +721,55 @@ function getColumns(key: any) {
   }
 }
 
+const COLORS = ['#00C49F', '#0088FE', '#0088FE', '#FF8042']; // Add more colors if you have more data points
+
+// Function to get the last 7 days
+const getLast7Days = () => {
+  const result = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    result.push(d.toISOString().split('T')[0]); // Get the date part of the ISO string
+  }
+  return result;
+};
+
+// Get the last 7 days
+const last7Days = getLast7Days();
+
+// Filter messages to only include messages from the last 7 days
+//@ts-ignore
+let recentMessages = [];
+if (!isloading3 && messagess) {
+  // Filter messages to only include messages from the last 7 days
+  //@ts-ignore
+  recentMessages = messagess.filter(message => last7Days.includes(new Date(message.createdAt).toISOString().split('T')[0]));
+}
+// Group messages by date and count the number of messages for each date
+//@ts-ignore
+let groupedMessages = {};
+if (recentMessages.length > 0) {
+  //@ts-ignore
+  groupedMessages = recentMessages.reduce((acc, message) => {
+    const date = new Date(message.createdAt).toISOString().split('T')[0]; // Get the date part of the createdAt string
+    acc[date] = (acc[date] || 0) + 1; // Increment the count for this date
+    return acc;
+  }, {});
+}
+
+// Transform the groupedMessages object into an array of objects
+//@ts-ignore
+let messagesData: { name: string; messages: number }[] = [];
+if (Object.keys(groupedMessages).length > 0) {
+  messagesData = Object.entries(groupedMessages).map(([date, count]) => ({
+    name: date,
+    messages: count as number,
+  }));
+}
+const maxTick = Math.max(...messagesData.map(item => item.messages));
+const ticks = Array.from({length: Math.floor(maxTick / 5) + 1}, (_, i) => i * 5);
+
+
 
   return (
     <div className='mt-20'>
@@ -722,7 +787,88 @@ function getColumns(key: any) {
       <Layout>
         <Content style={{ margin: '0 16px' }}>
           <Table columns={getColumns(selectedKey)} dataSource={getDataSource(selectedKey)} loading={isLoading} />
+          {['1','3', '4'].includes(selectedKey) && (
+  <div style={{ width: '100%', height: 300 }}>
+    <ResponsiveContainer>
+      <PieChart>
+        <Pie
+          dataKey="value"
+          data={chartData}
+          fill="#8884d8"
+          label={(entry) => entry.name}
+        >
+          {
+            chartData.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
+          }
+        </Pie>
+      </PieChart>
+    </ResponsiveContainer>
+  </div>
 
+
+)}
+{selectedKey === '5' && (
+  <div style={{ width: '100%', height: 300 }}>
+    <ResponsiveContainer>
+      {
+        (() => {
+          const sortedMessagesData = [...messagesData].sort((a, b) => new Date(a.name).getTime() - new Date(b.name).getTime());          const maxTick = Math.max(...sortedMessagesData.map(item => item.messages));
+          const ticks = Array.from({length: Math.floor(maxTick / 5) + 1}, (_, i) => i * 5);
+          return (
+            <ComposedChart data={sortedMessagesData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+              <CartesianGrid stroke="#f5f5f5" />
+              <XAxis dataKey="name" scale="auto" />
+              <YAxis tickFormatter={(tick) => tick.toString()} ticks={ticks} />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="messages" barSize={20} fill="#413ea0" />
+              <Line type="monotone" dataKey="messages" stroke="#ff7300" />
+            </ComposedChart>
+          );
+        })()
+      }
+    </ResponsiveContainer>
+  </div>
+)}
+
+
+
+{selectedKey === '6' && (
+  <div style={{ width: '100%', height: 300 }}>
+    <ResponsiveContainer>
+      {
+        (() => {
+          const sortedReportsData = [...reportss].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+          const reportsByDate = sortedReportsData.reduce((acc: {[key: string]: number}, report: {createdAt: string}) => {
+            const date = new Date(report.createdAt).toLocaleDateString();
+            if (!acc[date]) {
+              acc[date] = 1;
+            } else {
+              acc[date]++;
+            }
+            return acc;
+          }, {});
+
+          const data = Object.entries(reportsByDate).map(([date, count]) => ({ date, count: Number(count) }));
+          const maxTick = Math.max(...data.map((item: {date: string, count: number}) => item.count));
+          const ticks = Array.from({length: Math.floor(maxTick / 5) + 1}, (_, i) => i * 5);
+
+          return (
+            <ComposedChart data={data} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+              <CartesianGrid stroke="#f5f5f5" />
+              <XAxis dataKey="date" />
+              <YAxis tickFormatter={(tick) => tick.toString()} ticks={ticks} />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="count" barSize={20} fill="#413ea0" />
+              <Line type="monotone" dataKey="count" stroke="#ff7300" />
+            </ComposedChart>
+          );
+        })()
+      }
+    </ResponsiveContainer>
+  </div>
+)}
         </Content>
        
       </Layout>

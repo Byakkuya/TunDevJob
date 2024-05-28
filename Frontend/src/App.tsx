@@ -58,7 +58,7 @@ function App() {
                                     ? "/profile"
                                     : "/profile/:id"
                             }
-                            element={<Profile/>}
+                            element={<PrivateRoute><Profile/></PrivateRoute>}
                         />
 
 <Route
@@ -70,11 +70,11 @@ function App() {
                               }
                         />
                         
-                        <Route path="/Company-profile" element={<CompanyProfile/>}/>
-                        <Route path="/Company-profile/:id" element={<CompanyProfile/>} />
-                        <Route path="/upload-job" element={<UploadJob/>}/>
-                        <Route path="/job-detail/:id" element={<JobDetail/>}/>
-                        <Route path="apply/:id" element={<ApplyJob/>}/>
+                        <Route path="/Company-profile" element={<PrivateRoute><CompanyProfile/></PrivateRoute>}/>
+                        <Route path="/Company-profile/:id" element={<PrivateRoute><CompanyProfile/></PrivateRoute>}/>
+                        
+                        <Route path="/job-detail/:id" element={<PrivateRoute><JobDetail/></PrivateRoute>}/>
+                       {/*  <Route path="apply/:id" element={<ApplyJob/>}/> */}
 
                     </Route>
 

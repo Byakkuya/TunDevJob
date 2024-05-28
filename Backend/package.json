@@ -20,6 +20,7 @@
     "express": "^4.18.3",
     "express-validator": "^7.0.1",
     "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.13",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "zod": "^3.22.4"
@@ -33,7 +34,9 @@
     "@types/node": "^20.11.27",
     "esbuild-register": "^3.5.0",
     "nodemon": "^3.1.0",
+    "pre-commit": "^1.2.2",
     "prisma": "^5.11.0",
+    "rimraf": "^5.0.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.2"
   }

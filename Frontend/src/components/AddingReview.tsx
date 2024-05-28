@@ -46,6 +46,8 @@ const AddingReview = () => {
                     marginTop: '10vh',
                 },
             });
+            // reload the page
+            window.location.reload();
             queryClient.invalidateQueries({ queryKey: ['testimonials'] });
         },
         onError(error, variables, context) {
