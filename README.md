@@ -12,31 +12,17 @@ PS : **Typescript** was used in the entire project
 
 ## Features
 
-- Light/dark mode toggle
-- Live previews
-- Fullscreen mode
-- Cross platform
+- Secured Authentification
+- Post Jobs
+- Apply Jobs
+- Browse Jobs and Companies Lists
+- Add,Edit and Delete Testimonails
+- Report Testimonails
+- Manager Users
+- Admin Dashboard ...
 
-
-## Environment Variables
-
-To run this project, you will need to add the following environment variables to your .env file
-
-`API_KEY`
-
-`ANOTHER_API_KEY`
-
-
-## Installation
-
-Install my-project with npm
-
-```bash
-  npm install my-project
-  cd my-project
-```
     
 ## Feedback
 
-If you have any feedback, please reach out to us at fake@fake.com
+If you have any feedback, please reach out to us at contact.ahmedzbaa@gmail.com
 
